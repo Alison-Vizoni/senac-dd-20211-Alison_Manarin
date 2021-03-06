@@ -10,6 +10,10 @@ import javax.swing.JLabel;
 
 public class PrimeiraTela extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
