@@ -1,4 +1,4 @@
-package model.entity.exercicio1;
+package model.entity;
 
 import java.time.LocalDate;
 
@@ -12,10 +12,9 @@ public class Vacina {
 	private int fase;
 	private int quantidadeDoses;
 	
-	public Vacina(int idVacina, String nome, String paisDeOrigem, String estagioPesquisa, LocalDate dataInicioPesquisa,
+	public Vacina(String nome, String paisDeOrigem, String estagioPesquisa, LocalDate dataInicioPesquisa,
 			Pessoa pesquisadorResponsavel, int fase, int quantidadeDoses) {
 		super();
-		this.idVacina = idVacina;
 		this.nome = nome;
 		this.paisDeOrigem = paisDeOrigem;
 		this.estagioPesquisa = estagioPesquisa;

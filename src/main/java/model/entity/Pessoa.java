@@ -1,4 +1,4 @@
-package model.entity.exercicio1;
+package model.entity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,18 +8,17 @@ public class Pessoa {
 	private String nome;
 	private LocalDate dataNascimento;
 	private char sexo;
-	private String CPF;
+	private String cpf;
 	private int tipo;
 	private List<AplicacaoVacina> vacinacoes;
 	
-	public Pessoa(int idPessoa, String nome, LocalDate dataNascimento, char sexo, String cPF, int tipo,
+	public Pessoa(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
 			List<AplicacaoVacina> vacinacoes) {
 		super();
-		this.idPessoa = idPessoa;
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
 		this.sexo = sexo;
-		CPF = cPF;
+		this.cpf = cpf;
 		this.tipo = tipo;
 		this.vacinacoes = vacinacoes;
 	}
@@ -56,12 +55,12 @@ public class Pessoa {
 		this.sexo = sexo;
 	}
 
-	public String getCPF() {
-		return CPF;
+	public String getcpf() {
+		return cpf;
 	}
 
-	public void setCPF(String cPF) {
-		CPF = cPF;
+	public void setcpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	public int getTipo() {
