@@ -1,18 +1,18 @@
 package model.entity;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 public class Pessoa {
 	private int idPessoa;
 	private String nome;
-	private LocalDate dataNascimento;
+	private Date dataNascimento;
 	private char sexo;
 	private String cpf;
 	private int tipo;
 	private List<AplicacaoVacina> vacinacoes;
 	
-	public Pessoa(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
+	public Pessoa(String nome, Date dataNascimento, char sexo, String cpf, int tipo,
 			List<AplicacaoVacina> vacinacoes) {
 		super();
 		this.nome = nome;
@@ -21,6 +21,10 @@ public class Pessoa {
 		this.cpf = cpf;
 		this.tipo = tipo;
 		this.vacinacoes = vacinacoes;
+	}
+
+	public Pessoa() {
+		super();
 	}
 
 	public int getIdPessoa() {
@@ -39,11 +43,11 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
-	public LocalDate getDataNascimento() {
+	public Date getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(LocalDate dataNascimento) {
+	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
