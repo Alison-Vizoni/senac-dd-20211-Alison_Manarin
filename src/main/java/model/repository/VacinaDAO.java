@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.entity.Vacina;
 
@@ -85,6 +87,118 @@ public class VacinaDAO {
 		}
 
 		return atualizou;
+	}
+	
+	public boolean excluirVacina(Integer idVacina) {
+		
+		boolean atualizou = false;
+		
+		String sql = " DELETE FROM VACINA WHERE IDVACINA = ?";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
+		try {
+
+			stmt.setInt(1, idVacina);
+			
+			atualizou = stmt.executeUpdate() > 0;
+			
+		} catch (SQLException e) {
+			System.out.println("Erro ao excluir vacina: \n " + e.getMessage());
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("Erro ao fechar conexão (excluir pessoa): \n " + e.getMessage());
+			}
+			
+		}
+
+		return atualizou;
+	}
+	
+	public Vacina consultarVacinaPorId(Integer idVacina) {
+		
+		Vacina vacinaConsultada = null;
+		
+		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
+		try {
+			stmt.setInt(1, idVacina);
+			
+			ResultSet resultadoConsulta = stmt.executeQuery();
+			
+			if (resultadoConsulta.next()) {
+				vacinaConsultada = new Vacina();
+				vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
+				vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
+				vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("paisDeOrigem"));
+				vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("estagioPesquisa"));
+				vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("dataInicioPesquisa"));
+				// vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getObject("pesquisadorResponsavel"));
+				vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
+				vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("quantidadeDoses"));
+				}
+		} catch (SQLException e) {
+			System.out.println("Erro ao atualizar vacina: \n " + e.getMessage());
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("Erro ao fechar conexão (atualizar pessoa): \n " + e.getMessage());
+			}
+			
+		}
+
+		return vacinaConsultada;
+	}
+	
+	public List<Vacina> consultarTodasVacinas() {
+		
+		List<Vacina> todasVacinas = new ArrayList<Vacina>();
+		
+		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		
+		try {
+	
+			
+			ResultSet resultadoConsulta = stmt.executeQuery();
+			
+			while (resultadoConsulta.next()) {
+				Vacina vacina = new Vacina();
+				vacina.setIdVacina(resultadoConsulta.getInt("idVacina"));
+				vacina.setNome(resultadoConsulta.getString("nome"));
+				vacina.setPaisDeOrigem(resultadoConsulta.getString("paisDeOrigem"));
+				vacina.setEstagioPesquisa(resultadoConsulta.getString("estagioPesquisa"));
+				vacina.setDataInicioPesquisa(resultadoConsulta.getDate("dataInicioPesquisa"));
+				// vacina.setPesquisadorResponsavel(resultadoConsulta.getObject("pesquisadorResponsavel"));
+				vacina.setFase(resultadoConsulta.getInt("fase"));
+				vacina.setQuantidadeDoses(resultadoConsulta.getInt("quantidadeDoses"));
+				
+				todasVacinas.add(vacina);
+				}
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("Erro ao fechar conexão (consultar todas as vacinas): \n " + e.getMessage());
+			}
+			
+		}
+
+		return todasVacinas;
 	}
 	
 }

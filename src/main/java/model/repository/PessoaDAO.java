@@ -11,7 +11,7 @@ import model.entity.Pessoa;
 
 public class PessoaDAO {
 	
-	public Pessoa cadastrar(Pessoa novaPessoa) {
+	public Pessoa cadastrarPessoa(Pessoa novaPessoa) {
 		String sql = "INSERT INTO PESSOA ( NOME, DATA_NASCIMENTO, SEXO, CPF, TIPO ) VALUES ( ?, ?, ?, ?, ? )";
 		
 		Connection conn = Banco.getConnection();
@@ -45,7 +45,7 @@ public class PessoaDAO {
 		return novaPessoa;
 	}
 	
-	public boolean atualizar(Pessoa atualizarPessoa) {
+	public boolean atualizarPessoa(Pessoa atualizarPessoa) {
 		
 		boolean atualizou = false;
 		
@@ -81,7 +81,7 @@ public class PessoaDAO {
 		return atualizou;
 	}
 	
-	public boolean excluir(Integer idPessoa) {
+	public boolean excluirPessoa(Integer idPessoa) {
 		
 		boolean excluiu = false;
 		
@@ -110,7 +110,7 @@ public class PessoaDAO {
 		return excluiu;
 	}
 	
-	public Pessoa consutarPorId(Integer idPessoa) {
+	public Pessoa consutarPessoaPorId(Integer idPessoa) {
 		
 		Pessoa pessoaConsultada = null;
 		
@@ -150,7 +150,7 @@ public class PessoaDAO {
 	
 	public List<Pessoa> consutarTodasPessoas() {
 		
-		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+		List<Pessoa> todasPessoas = new ArrayList<Pessoa>();
 		
 		String sql = "SELECT * FROM PESSOA";
 		
@@ -170,7 +170,7 @@ public class PessoaDAO {
 				pessoa.setcpf(resultadoConsulta.getString("cpf"));
 				pessoa.setTipo(resultadoConsulta.getInt("tipo"));
 				
-				pessoas.add(pessoa);
+				todasPessoas.add(pessoa);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar todas as pessoas: \n" + e.getMessage());
@@ -184,6 +184,6 @@ public class PessoaDAO {
 			}
 		}
 		
-		return pessoas;
+		return todasPessoas;
 	}
 }

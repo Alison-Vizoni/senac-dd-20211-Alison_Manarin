@@ -24,6 +24,10 @@ public class Vacina {
 		this.fase = fase;
 		this.quantidadeDoses = quantidadeDoses;
 	}
+	
+	public Vacina() {
+		super();
+	}
 
 	public Integer getIdVacina() {
 		return idVacina;
