@@ -3,16 +3,29 @@ package model.entity;
 import java.sql.Date;
 
 public class AplicacaoVacina {
+	private int idAplicacaoVacina;
 	private Vacina idVacina;
 	private Date dataAplicacao;
 	private int nota;
 
-	public AplicacaoVacina(Vacina idVacina, Date dataAplicacao, int nota) {
+	public AplicacaoVacina(int idAplicacaoVacina, Vacina idVacina, Date dataAplicacao, int nota) {
 		super();
-
+		this.idAplicacaoVacina = idAplicacaoVacina;
 		this.idVacina = idVacina;
 		this.dataAplicacao = dataAplicacao;
 		this.nota = nota;
+	}
+
+	public AplicacaoVacina() {
+		super();
+	}
+
+	public int getIdAplicacaoVacina() {
+		return idAplicacaoVacina;
+	}
+
+	public void setIdAplicacaoVacina(int idAplicacaoVacina) {
+		this.idAplicacaoVacina = idAplicacaoVacina;
 	}
 
 	public Vacina getIdVacina() {
