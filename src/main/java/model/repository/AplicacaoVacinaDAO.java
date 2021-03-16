@@ -8,10 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.entity.AplicacaoVacina;
-import model.entity.Pessoa;
 
 public class AplicacaoVacinaDAO {
 	
+	/**
+	 * Cadastra uma nova aplicacao de vacina na Database
+	 * 
+	 * @param Recebe o objeto com os dados a serem persistidos na tabela APLICACAO_VACINA
+	 * 
+	 * @return A aplicacao vacina cadastrada na Database
+	 */
 	public AplicacaoVacina cadastrarAplicacaoVacina(AplicacaoVacina novaAplicacaoVacina) {
 		
 		String sql = "INSERT INTO APLICACAO_VACINA (IDVACINA, DATA_APLICACAO, NOTA) VALUES ( ?, ?, ? )";
@@ -45,6 +51,13 @@ public class AplicacaoVacinaDAO {
 		return novaAplicacaoVacina;
 	}
 	
+	/**
+	 * Atualiza uma aplicacao de vacina na Database
+	 * 
+	 * @param Recebe o objeto com os dados as serem atualizados na tabela APLICACAO_VACINA
+	 * 
+	 * @return Se o registro foi atualizado na tabela ou não
+	 */
 	public boolean atualizarAplicacaoVacina(AplicacaoVacina atualizarAplicacaoVacina) {
 		
 		boolean atualizou = false;
@@ -79,6 +92,13 @@ public class AplicacaoVacinaDAO {
 		return atualizou;
 	}
 	
+	/**
+	 * Exclui uma aplicacao de vacina na Database
+	 * 
+	 * @param Recebe a PK da aplicacao vacina a ser excluida
+	 * 
+	 * @return  se o registro foi excluido ou nao da tabela
+	 */
 	public boolean excluirAplicacaoVacina(Integer idAplicacaoVacina) {
 		
 		boolean excluiu = false;
@@ -109,6 +129,13 @@ public class AplicacaoVacinaDAO {
 		return excluiu;
 	}
 	
+	/**
+	 * Consulta uma aplicacao de vacina especifica
+	 * 
+	 * @param Recebe a PK da aplicacao de vacina a ser Consultada
+	 * 
+	 * @return Se o registro foi consultado ou não
+	 */
 	public AplicacaoVacina consultarAplicacaoVacinaPorId(Integer idAplicacaoVacina) {
 		
 		AplicacaoVacina aplicacaoVacinaConsultada = null;
@@ -124,11 +151,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				aplicacaoVacinaConsultada = new AplicacaoVacina();
-				aplicacaoVacinaConsultada.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
-				// aplicacaoVacinaConsultada.setIdVacina(resultadoConsulta.getObject("ID_VACINA"));
-				aplicacaoVacinaConsultada.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO"));
-				aplicacaoVacinaConsultada.setNota(resultadoConsulta.getInt("NOTA"));
+				aplicacaoVacinaConsultada = this.converterDoResultSet(resultadoConsulta);
 				
 			}
 		} catch (SQLException e) {
@@ -144,7 +167,12 @@ public class AplicacaoVacinaDAO {
 		
 		return aplicacaoVacinaConsultada;
 	}
-	
+
+	/**
+	 * Consulta todas as aplicações de vacinas cadastradas na Database
+	 * 
+	 * @return Retorna todas as aplicações de vacinas existentes
+	 */
 	public List<AplicacaoVacina> consultarAplicacaoVacina() {
 		
 		List<AplicacaoVacina> todasAplicacaoVacina = new ArrayList<AplicacaoVacina>();
@@ -159,11 +187,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				AplicacaoVacina aplicacaoVacina = new AplicacaoVacina();
-				aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
-				// aplicacaoVacina.setIdVacina(resultadoConsulta.getObject("ID_VACINA"));
-				aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO"));
-				aplicacaoVacina.setNota(resultadoConsulta.getInt("NOTA"));
+				AplicacaoVacina aplicacaoVacina = this.converterDoResultSet(resultadoConsulta);
 				
 				todasAplicacaoVacina.add(aplicacaoVacina);
 			}
@@ -179,6 +203,15 @@ public class AplicacaoVacinaDAO {
 		}
 		
 		return todasAplicacaoVacina;
+	}
+	
+	private AplicacaoVacina converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+		AplicacaoVacina aplicacaoVacina = new AplicacaoVacina();
+		aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
+		// aplicacaoVacina.setIdVacina(resultadoConsulta.getObject("IDVACINA"));
+		aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO"));
+		aplicacaoVacina.setNota(resultadoConsulta.getInt("NOTA"));
+		return aplicacaoVacina;
 	}
 
 }

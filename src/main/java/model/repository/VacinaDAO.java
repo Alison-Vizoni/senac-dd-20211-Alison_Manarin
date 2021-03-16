@@ -11,15 +11,20 @@ import model.entity.Vacina;
 
 public class VacinaDAO {
 	
+	/**
+	 * Cadastra uma nova vacina na database.
+	 * 
+	 * @param novaVacina o objeto com os dados a serem persistidos na tabela VACINA
+	 * 
+	 * @return A vacina com a PK cadastrada no banco.
+	 */
 	public Vacina cadastrarVacina(Vacina novaVacina) {
 		String sql = " INSERT INTO VACINA ( NOME, PAIS_ORDIGEM, ESTAGIO_PESQUISA, DATA_INICIO_PESQUISA,"
 				+ " ID_PESQUISADOR_RESPONSAVEL, FASE, QUANTIDADE_DOSES )"
 				+ " VALUES ( ?, ?, ?, ?, ?, ?, ? )";
 		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		try {
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 			stmt.setString(1, novaVacina.getNome());
 			stmt.setString(2, novaVacina.getPaisDeOrigem());
 			stmt.setString(3, novaVacina.getEstagioPesquisa());
@@ -37,19 +42,18 @@ public class VacinaDAO {
 			
 		} catch (SQLException e) {
 			System.out.println("Erro ao cadastrar vacina: \n " + e.getMessage());
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão (cadastro de pessoa): \n " + e.getMessage());
-			}
-			
 		}
 
 		return novaVacina;
 	}
 	
+	/**
+	 * Atualiza uma vacina na database.
+	 * 
+	 * @param atualizarVacina o objeto com os dados a serem atualizados na tabela VACINA
+	 * 
+	 * @return se o registro foi ou nao atualizado na tabela
+	 */
 	public boolean atualizarVacina(Vacina atualizarVacina) {
 		
 		boolean atualizou = false;
@@ -58,10 +62,8 @@ public class VacinaDAO {
 				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?)"
 				+ " WHERE IDVACINA = ?";
 		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		try {
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 			stmt.setString(1, atualizarVacina.getNome());
 			stmt.setString(2, atualizarVacina.getPaisDeOrigem());
 			stmt.setString(3, atualizarVacina.getEstagioPesquisa());
@@ -76,129 +78,109 @@ public class VacinaDAO {
 			atualizou = quantidadeDeLinhasAfetadas > 0;
 		} catch (SQLException e) {
 			System.out.println("Erro ao atualizar vacina: \n " + e.getMessage());
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão (atualizar pessoa): \n " + e.getMessage());
-			}
-			
 		}
 
 		return atualizou;
 	}
 	
+	/**
+	 * Exclui uma vacina na database
+	 * 
+	 * @param A PK da vacina a ser excluida.
+	 * 
+	 * @return se o registro foi ou nao excluido na tabela.
+	 */
 	public boolean excluirVacina(Integer idVacina) {
 		
-		boolean atualizou = false;
+		boolean excluiu = false;
 		
 		String sql = " DELETE FROM VACINA WHERE IDVACINA = ?";
-		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		try {
+
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 
 			stmt.setInt(1, idVacina);
 			
-			atualizou = stmt.executeUpdate() > 0;
+			excluiu = stmt.executeUpdate() > 0;
 			
 		} catch (SQLException e) {
 			System.out.println("Erro ao excluir vacina: \n " + e.getMessage());
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão (excluir pessoa): \n " + e.getMessage());
-			}
-			
 		}
 
-		return atualizou;
+		return excluiu;
 	}
 	
+	/**
+	 * Busca uma vacina especifica na database
+	 * 
+	 * @param A PK da vacina a ser buscada.
+	 * 
+	 * @return A vacina buscada.
+	 */
 	public Vacina consultarVacinaPorId(Integer idVacina) {
 		
 		Vacina vacinaConsultada = null;
 		
 		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
 		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		try {
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 			stmt.setInt(1, idVacina);
 			
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				vacinaConsultada = new Vacina();
-				vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
-				vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
-				vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("paisDeOrigem"));
-				vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("estagioPesquisa"));
-				vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("dataInicioPesquisa"));
-				// vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getObject("pesquisadorResponsavel"));
-				vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
-				vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("quantidadeDoses"));
+				
+				vacinaConsultada = this.converterDoResultSet(resultadoConsulta);
 				}
 		} catch (SQLException e) {
 			System.out.println("Erro ao atualizar vacina: \n " + e.getMessage());
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão (atualizar pessoa): \n " + e.getMessage());
-			}
-			
 		}
 
 		return vacinaConsultada;
 	}
-	
+
+	/**
+	 * Busca todas as vacinas cadastradas na Database.
+	 * 
+	 * @return Retorna todas as vacinas cadastradas na Database.
+	 */
 	public List<Vacina> consultarTodasVacinas() {
 		
 		List<Vacina> todasVacinas = new ArrayList<Vacina>();
 		
 		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
 		
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		
-		try {
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 	
 			
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				Vacina vacina = new Vacina();
-				vacina.setIdVacina(resultadoConsulta.getInt("idVacina"));
-				vacina.setNome(resultadoConsulta.getString("nome"));
-				vacina.setPaisDeOrigem(resultadoConsulta.getString("paisDeOrigem"));
-				vacina.setEstagioPesquisa(resultadoConsulta.getString("estagioPesquisa"));
-				vacina.setDataInicioPesquisa(resultadoConsulta.getDate("dataInicioPesquisa"));
-				// vacina.setPesquisadorResponsavel(resultadoConsulta.getObject("pesquisadorResponsavel"));
-				vacina.setFase(resultadoConsulta.getInt("fase"));
-				vacina.setQuantidadeDoses(resultadoConsulta.getInt("quantidadeDoses"));
+				
+				Vacina vacina = this.converterDoResultSet(resultadoConsulta);
 				
 				todasVacinas.add(vacina);
 				}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());
-		} finally {
-			try {
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão (consultar todas as vacinas): \n " + e.getMessage());
-			}
-			
 		}
 
 		return todasVacinas;
+	}
+
+	private Vacina converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+		Vacina vacinaConsultada = new Vacina();
+		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
+		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
+		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
+		vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA"));
+		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA"));
+		// vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getObject("ID_PESQUISADOR_RESPONSAVEL"));
+		vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
+		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
+		return null;
 	}
 	
 }

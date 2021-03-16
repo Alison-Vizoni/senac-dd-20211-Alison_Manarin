@@ -22,9 +22,24 @@ public class Pessoa {
 		this.tipo = tipo;
 		this.vacinacoes = vacinacoes;
 	}
-
+	
 	public Pessoa() {
 		super();
+	}
+
+	@Override
+	public String toString() {
+		
+		String textoVacina = "";
+		
+		if (this.getVacinacoes() == null || this.getVacinacoes().isEmpty()) {
+			textoVacina = "Sem aplicção vacina";
+		} else {
+			textoVacina = vacinacoes.toString();
+		}
+		
+		return " Nome = " + this.getNome() + ", data Nascimento = " + this.getDataNascimento() + ", sexo = "
+				+ this.getSexo() + ", cpf = " + this.getcpf() + ", tipo = " + this.getTipo() + ", vacinacoes = " + textoVacina;
 	}
 
 	public int getIdPessoa() {
