@@ -20,22 +20,19 @@ public class AplicacaoVacinaDAO {
 	 */
 	public AplicacaoVacina cadastrarAplicacaoVacina(AplicacaoVacina novaAplicacaoVacina) {
 		
-		String sql = "INSERT INTO APLICACAO_VACINA (IDVACINA, DATA_APLICACAO, NOTA) VALUES ( ?, ?, ? )";
+		String sql = "INSERT INTO APLICACAO_VACINA (IDVACINA, IDPESSOA, DATA_APLICACAO, NOTA) VALUES ( ?, ?, ?, ? )";
 		
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 		
 		try {
 			stmt.setObject(1, novaAplicacaoVacina.getIdVacina());
-			stmt.setDate(2, novaAplicacaoVacina.getDataAplicacao());
-			stmt.setInt(3, novaAplicacaoVacina.getNota());
+			stmt.setObject(2, novaAplicacaoVacina.getIdPessoa());
+			// stmt.setDate(3, novaAplicacaoVacina.getDataAplicacao());
+			stmt.setInt(4, novaAplicacaoVacina.getNota());
 			
 			stmt.executeUpdate();
 			
-			ResultSet chavesgeradas = stmt.getGeneratedKeys();
-			if (chavesgeradas.next()) {
-				novaAplicacaoVacina.setIdAplicacaoVacina(chavesgeradas.getInt(1));
-			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao cadastrar aplicacao vacina: \n " + e.getMessage());
 		} finally {
@@ -69,9 +66,9 @@ public class AplicacaoVacinaDAO {
 		
 		try {
 			stmt.setObject(1, atualizarAplicacaoVacina.getIdVacina());
-			stmt.setDate(2, atualizarAplicacaoVacina.getDataAplicacao());
+			// stmt.setDate(2, atualizarAplicacaoVacina.getDataAplicacao());
 			stmt.setInt(3, atualizarAplicacaoVacina.getNota());
-			stmt.setInt(4, atualizarAplicacaoVacina.getIdAplicacaoVacina());
+
 			
 			int quantidadeLinhasAfetadas = stmt.executeUpdate();
 			
@@ -207,9 +204,8 @@ public class AplicacaoVacinaDAO {
 	
 	private AplicacaoVacina converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
 		AplicacaoVacina aplicacaoVacina = new AplicacaoVacina();
-		aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
 		// aplicacaoVacina.setIdVacina(resultadoConsulta.getObject("IDVACINA"));
-		aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO"));
+		// aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO"));
 		aplicacaoVacina.setNota(resultadoConsulta.getInt("NOTA"));
 		return aplicacaoVacina;
 	}

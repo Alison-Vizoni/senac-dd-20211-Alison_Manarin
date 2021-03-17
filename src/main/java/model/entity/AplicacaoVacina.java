@@ -1,31 +1,23 @@
 package model.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class AplicacaoVacina {
-	private int idAplicacaoVacina;
 	private Vacina idVacina;
-	private Date dataAplicacao;
+	private int idPessoa;
+	private LocalDate dataAplicacao;
 	private int nota;
 
-	public AplicacaoVacina(int idAplicacaoVacina, Vacina idVacina, Date dataAplicacao, int nota) {
+	public AplicacaoVacina(Vacina idVacina, int idPessoa, LocalDate dataAplicacao, int nota) {
 		super();
-		this.idAplicacaoVacina = idAplicacaoVacina;
 		this.idVacina = idVacina;
+		this.idPessoa = idPessoa;
 		this.dataAplicacao = dataAplicacao;
 		this.nota = nota;
 	}
 
 	public AplicacaoVacina() {
 		super();
-	}
-
-	public int getIdAplicacaoVacina() {
-		return idAplicacaoVacina;
-	}
-
-	public void setIdAplicacaoVacina(int idAplicacaoVacina) {
-		this.idAplicacaoVacina = idAplicacaoVacina;
 	}
 
 	public Vacina getIdVacina() {
@@ -36,11 +28,19 @@ public class AplicacaoVacina {
 		this.idVacina = idVacina;
 	}
 	
-	public Date getDataAplicacao() {
+	public int getIdPessoa() {
+		return idPessoa;
+	}
+
+	public void setIdPessoa(int idPessoa) {
+		this.idPessoa = idPessoa;
+	}
+
+	public LocalDate getDataAplicacao() {
 		return dataAplicacao;
 	}
 
-	public void setDataAplicacao(Date dataAplicacao) {
+	public void setDataAplicacao(LocalDate dataAplicacao) {
 		this.dataAplicacao = dataAplicacao;
 	}
 

@@ -24,12 +24,12 @@ public class VacinaDAO {
 				+ " VALUES ( ?, ?, ?, ?, ?, ?, ? )";
 		
 		try (Connection conn = Banco.getConnection();
-				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
 			stmt.setString(1, novaVacina.getNome());
 			stmt.setString(2, novaVacina.getPaisDeOrigem());
 			stmt.setString(3, novaVacina.getEstagioPesquisa());
-			stmt.setDate(4, novaVacina.getDataInicioPesquisa());
-			stmt.setObject(5, novaVacina.getPesquisadorResponsavel());
+			stmt.setDate(4, java.sql.Date.valueOf(novaVacina.getDataInicioPesquisa()));
+			stmt.setObject(5, novaVacina.getPesquisadorResponsavel().getIdPessoa());
 			stmt.setInt(6, novaVacina.getFase());
 			stmt.setInt(7, novaVacina.getQuantidadeDoses());
 			
@@ -67,7 +67,7 @@ public class VacinaDAO {
 			stmt.setString(1, atualizarVacina.getNome());
 			stmt.setString(2, atualizarVacina.getPaisDeOrigem());
 			stmt.setString(3, atualizarVacina.getEstagioPesquisa());
-			stmt.setDate(4, atualizarVacina.getDataInicioPesquisa());
+			stmt.setDate(4, java.sql.Date.valueOf(atualizarVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel());
 			stmt.setInt(6, atualizarVacina.getFase());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
@@ -176,7 +176,7 @@ public class VacinaDAO {
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
 		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
 		vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA"));
-		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA"));
+		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 		// vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getObject("ID_PESQUISADOR_RESPONSAVEL"));
 		vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));

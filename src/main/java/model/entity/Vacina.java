@@ -1,21 +1,20 @@
 package model.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Vacina {	
 	private Integer idVacina;
 	private String nome;
 	private String paisDeOrigem;
 	private String estagioPesquisa;
-	private Date dataInicioPesquisa;
+	private LocalDate dataInicioPesquisa;
 	private Pessoa pesquisadorResponsavel;
 	private int fase;
 	private int quantidadeDoses;
 
-	public Vacina(Integer idVacina, String nome, String paisDeOrigem, String estagioPesquisa,
-			Date dataInicioPesquisa, Pessoa pesquisadorResponsavel, int fase, int quantidadeDoses) {
+	public Vacina(String nome, String paisDeOrigem, String estagioPesquisa,
+			LocalDate dataInicioPesquisa, Pessoa pesquisadorResponsavel, int fase, int quantidadeDoses) {
 		super();
-		this.idVacina = idVacina;
 		this.nome = nome;
 		this.paisDeOrigem = paisDeOrigem;
 		this.estagioPesquisa = estagioPesquisa;
@@ -27,6 +26,14 @@ public class Vacina {
 	
 	public Vacina() {
 		super();
+	}
+
+	@Override
+	public String toString() {
+		return " idVacina = " + this.idVacina + "\nnome = " + this.nome + "\npais De Origem = " + this.paisDeOrigem
+				+ "\nestagio Pesquisa = " + this.estagioPesquisa + "\ndata Inicio Pesquisa = " + this.dataInicioPesquisa
+				+ "\npesquisador Responsavel = " + this.pesquisadorResponsavel.getIdPessoa() + "\nfase = " + this.fase + "\nquantidade Doses = "
+				+ this.quantidadeDoses;
 	}
 
 	public Integer getIdVacina() {
@@ -61,11 +68,11 @@ public class Vacina {
 		this.estagioPesquisa = estagioPesquisa;
 	}
 
-	public Date getDataInicioPesquisa() {
+	public LocalDate getDataInicioPesquisa() {
 		return dataInicioPesquisa;
 	}
 
-	public void setDataInicioPesquisa(Date dataInicioPesquisa) {
+	public void setDataInicioPesquisa(LocalDate dataInicioPesquisa) {
 		this.dataInicioPesquisa = dataInicioPesquisa;
 	}
 

@@ -11,6 +11,7 @@ import model.entity.Pessoa;
 
 public class PessoaDAO {
 	
+	
 	/**
 	 * Cadastra uma nova pessoa na Database
 	 * 
@@ -22,9 +23,9 @@ public class PessoaDAO {
 		String sql = "INSERT INTO PESSOA ( NOME, DATA_NASCIMENTO, SEXO, CPF, TIPO ) VALUES ( ?, ?, ?, ?, ? )";
 		
 		try (Connection conn = Banco.getConnection();
-				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
 			stmt.setString(1, novaPessoa.getNome());
-			stmt.setDate(2, novaPessoa.getDataNascimento());
+			stmt.setDate(2, java.sql.Date.valueOf( novaPessoa.getDataNascimento()));
 			stmt.setString(3, String.valueOf(novaPessoa.getSexo()));
 			stmt.setString(4, novaPessoa.getcpf());
 			stmt.setInt(5, novaPessoa.getTipo());
@@ -59,7 +60,7 @@ public class PessoaDAO {
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 			stmt.setString(1, atualizarPessoa.getNome());
-			stmt.setDate(2, atualizarPessoa.getDataNascimento());
+			stmt.setDate(2, java.sql.Date.valueOf(atualizarPessoa.getDataNascimento()));
 			stmt.setString(3, String.valueOf(atualizarPessoa.getSexo()));
 			stmt.setString(4, atualizarPessoa.getcpf());
 			stmt.setInt(5, atualizarPessoa.getTipo());
@@ -94,6 +95,7 @@ public class PessoaDAO {
 
 			excluiu = stmt.executeUpdate() > 0;
 			
+			System.out.println("Pessoa " + idPessoa + " excluida com sucesso");
 		} catch (SQLException e) {
 			System.out.println("Erro ao excluir pessoa: \n " + e.getMessage());
 		}
@@ -123,12 +125,7 @@ public class PessoaDAO {
 			if (resultadoConsulta.next()) {
 				
 				pessoaConsultada = this.converterDoResultSet(resultadoConsulta);
-				pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
-				pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
-				pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO"));
-				pessoaConsultada.setSexo(resultadoConsulta.getString("sexo").charAt(0));
-				pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));
-				pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
+
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar pessoa por idPessoa: \n" + e.getMessage());
@@ -154,14 +151,8 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				Pessoa pessoa = new Pessoa();
-				pessoa.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
-				pessoa.setNome(resultadoConsulta.getString("nome"));
-				pessoa.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO"));
-				pessoa.setSexo(resultadoConsulta.getString("sexo").charAt(0));
-				pessoa.setcpf(resultadoConsulta.getString("cpf"));
-				pessoa.setTipo(resultadoConsulta.getInt("tipo"));
-				
+				Pessoa pessoa = this.converterDoResultSet(resultadoConsulta);
+
 				todasPessoas.add(pessoa);
 			}
 		} catch (SQLException e) {
@@ -175,10 +166,10 @@ public class PessoaDAO {
 		Pessoa pessoaConsultada = new Pessoa();
 		pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
 		pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
-		pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO"));
+		pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO").toLocalDate());
 		pessoaConsultada.setSexo(resultadoConsulta.getString("sexo").charAt(0));
 		pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));
 		pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
-		return null;
+		return pessoaConsultada;
 	}
 }

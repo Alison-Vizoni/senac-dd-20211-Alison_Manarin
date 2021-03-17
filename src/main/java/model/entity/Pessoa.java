@@ -1,18 +1,18 @@
 package model.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Pessoa {
 	private int idPessoa;
 	private String nome;
-	private Date dataNascimento;
+	private LocalDate dataNascimento;
 	private char sexo;
 	private String cpf;
 	private int tipo;
 	private List<AplicacaoVacina> vacinacoes;
 	
-	public Pessoa(String nome, Date dataNascimento, char sexo, String cpf, int tipo,
+	public Pessoa(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
 			List<AplicacaoVacina> vacinacoes) {
 		super();
 		this.nome = nome;
@@ -37,9 +37,10 @@ public class Pessoa {
 		} else {
 			textoVacina = vacinacoes.toString();
 		}
+
 		
-		return " Nome = " + this.getNome() + ", data Nascimento = " + this.getDataNascimento() + ", sexo = "
-				+ this.getSexo() + ", cpf = " + this.getcpf() + ", tipo = " + this.getTipo() + ", vacinacoes = " + textoVacina;
+		return "ID PESSOA " + this.getIdPessoa() + "\nNome = " + this.getNome() + "\ndata Nascimento = " + this.getDataNascimento() + "\nsexo = "
+				+ this.getSexo() + "\ncpf = " + this.getcpf() + "\ntipo = " + this.getTipo() + "\nvacinacoes = " + textoVacina;
 	}
 
 	public int getIdPessoa() {
@@ -58,11 +59,11 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
