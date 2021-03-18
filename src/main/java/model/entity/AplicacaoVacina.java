@@ -3,6 +3,7 @@ package model.entity;
 import java.time.LocalDate;
 
 public class AplicacaoVacina {
+	private int idAplicacaoVacina;
 	private Vacina idVacina;
 	private int idPessoa;
 	private LocalDate dataAplicacao;
@@ -18,6 +19,14 @@ public class AplicacaoVacina {
 
 	public AplicacaoVacina() {
 		super();
+	}
+
+	public int getIdAplicacaoVacina() {
+		return idAplicacaoVacina;
+	}
+
+	public void setIdAplicacaoVacina(int idAplicacaoVacina) {
+		this.idAplicacaoVacina = idAplicacaoVacina;
 	}
 
 	public Vacina getIdVacina() {
@@ -50,6 +59,12 @@ public class AplicacaoVacina {
 
 	public void setNota(int nota) {
 		this.nota = nota;
+	}
+
+	@Override
+	public String toString() {
+		return "id Aplicacao Vacina = " + this.idAplicacaoVacina + "\nidVacina = " + this.idVacina.getIdVacina() + "\nidPessoa = "
+				+ this.idPessoa + "\ndata Aplicacao=" + this.dataAplicacao + "\nnota = " + this.nota;
 	}
 	
 }

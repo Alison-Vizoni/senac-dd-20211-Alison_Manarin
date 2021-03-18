@@ -3,6 +3,11 @@ package model.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 
+ * @author Alison
+ *
+ */
 public class Pessoa {
 	private int idPessoa;
 	private String nome;
@@ -38,7 +43,6 @@ public class Pessoa {
 			textoVacina = vacinacoes.toString();
 		}
 
-		
 		return "ID PESSOA " + this.getIdPessoa() + "\nNome = " + this.getNome() + "\ndata Nascimento = " + this.getDataNascimento() + "\nsexo = "
 				+ this.getSexo() + "\ncpf = " + this.getcpf() + "\ntipo = " + this.getTipo() + "\nvacinacoes = " + textoVacina;
 	}

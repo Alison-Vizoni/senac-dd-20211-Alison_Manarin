@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.repository.PessoaDAO;
 import model.entity.Vacina;
+import model.entity.Pessoa;
 
 public class VacinaDAO {
 	
@@ -59,7 +61,7 @@ public class VacinaDAO {
 		boolean atualizou = false;
 		
 		String sql = " UPDATE VACINA SET NOME = ?, PAIS_ORDIGEM = ?, ESTAGIO_PESQUISA = ?, DATA_INICIO_PESQUISA = ?,"
-				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?)"
+				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?"
 				+ " WHERE IDVACINA = ?";
 		
 		try (Connection conn = Banco.getConnection();
@@ -68,7 +70,7 @@ public class VacinaDAO {
 			stmt.setString(2, atualizarVacina.getPaisDeOrigem());
 			stmt.setString(3, atualizarVacina.getEstagioPesquisa());
 			stmt.setDate(4, java.sql.Date.valueOf(atualizarVacina.getDataInicioPesquisa()));
-			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel());
+			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel().getIdPessoa());
 			stmt.setInt(6, atualizarVacina.getFase());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
 			stmt.setInt(8, atualizarVacina.getIdVacina());
@@ -177,10 +179,15 @@ public class VacinaDAO {
 		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
 		vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA"));
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
-		// vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getObject("ID_PESQUISADOR_RESPONSAVEL"));
+		
+		PessoaDAO pDAO = new PessoaDAO();
+		Pessoa responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
+		vacinaConsultada.setPesquisadorResponsavel(responsavel);
+		
 		vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
-		return null;
+		
+		return vacinaConsultada;
 	}
 	
 }

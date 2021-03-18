@@ -7,8 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.repository.Banco;
+import model.repository.AplicacaoVacinaDAO;
 import model.entity.Pessoa;
+import model.entity.AplicacaoVacina;
 
+/**
+ * 
+ * @author Alison
+ *
+ */
 public class PessoaDAO {
 	
 	
@@ -123,9 +130,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				
 				pessoaConsultada = this.converterDoResultSet(resultadoConsulta);
-
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar pessoa por idPessoa: \n" + e.getMessage());
@@ -170,6 +175,11 @@ public class PessoaDAO {
 		pessoaConsultada.setSexo(resultadoConsulta.getString("sexo").charAt(0));
 		pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));
 		pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
+		
+		AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
+		List<AplicacaoVacina> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
+		pessoaConsultada.setVacinacoes(aplicacoes);
+		
 		return pessoaConsultada;
 	}
 }
