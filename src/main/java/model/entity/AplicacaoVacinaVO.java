@@ -2,15 +2,19 @@ package model.entity;
 
 import java.time.LocalDate;
 
+import model.Enum.NotaAplicacaoVacina;
+
 public class AplicacaoVacinaVO {
 	private Integer idAplicacaoVacina;
 	private VacinaVO idVacina;
 	private int idPessoa;
 	private LocalDate dataAplicacao;
-	private int nota;
+	private NotaAplicacaoVacina nota;
 
-	public AplicacaoVacinaVO(VacinaVO idVacina, int idPessoa, LocalDate dataAplicacao, int nota) {
+	public AplicacaoVacinaVO(Integer idAplicacaoVacina, VacinaVO idVacina, int idPessoa, LocalDate dataAplicacao,
+			NotaAplicacaoVacina nota) {
 		super();
+		this.idAplicacaoVacina = idAplicacaoVacina;
 		this.idVacina = idVacina;
 		this.idPessoa = idPessoa;
 		this.dataAplicacao = dataAplicacao;
@@ -53,11 +57,11 @@ public class AplicacaoVacinaVO {
 		this.dataAplicacao = dataAplicacao;
 	}
 
-	public int getNota() {
+	public NotaAplicacaoVacina getNota() {
 		return nota;
 	}
 
-	public void setNota(int nota) {
+	public void setNota(NotaAplicacaoVacina nota) {
 		this.nota = nota;
 	}
 

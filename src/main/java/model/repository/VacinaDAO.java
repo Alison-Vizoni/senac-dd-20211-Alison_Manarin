@@ -9,7 +9,8 @@ import java.util.List;
 
 import model.repository.PessoaDAO;
 import model.entity.VacinaVO;
-import model.entity.FaseVacina;
+import model.Enum.EstagioPesquisa;
+import model.Enum.FaseVacina;
 import model.entity.PessoaVO;
 
 public class VacinaDAO {
@@ -30,7 +31,7 @@ public class VacinaDAO {
 				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
 			stmt.setString(1, novaVacina.getNome());
 			stmt.setString(2, novaVacina.getPaisDeOrigem());
-			stmt.setString(3, novaVacina.getEstagioPesquisa());
+			stmt.setString(3, novaVacina.getEstagioPesquisa().toString());
 			stmt.setDate(4, java.sql.Date.valueOf(novaVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, novaVacina.getPesquisadorResponsavel().getIdPessoa());
 			stmt.setString(6, novaVacina.getFase().toString());
@@ -69,7 +70,7 @@ public class VacinaDAO {
 				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 			stmt.setString(1, atualizarVacina.getNome());
 			stmt.setString(2, atualizarVacina.getPaisDeOrigem());
-			stmt.setString(3, atualizarVacina.getEstagioPesquisa());
+			stmt.setString(3, atualizarVacina.getEstagioPesquisa().toString());
 			stmt.setDate(4, java.sql.Date.valueOf(atualizarVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel().getIdPessoa());
 			stmt.setString(6, atualizarVacina.getFase().toString());
@@ -178,7 +179,7 @@ public class VacinaDAO {
 		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
 		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
-		vacinaConsultada.setEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA"));
+		vacinaConsultada.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 		
 		PessoaDAO pDAO = new PessoaDAO();

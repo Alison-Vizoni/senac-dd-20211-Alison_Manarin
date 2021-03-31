@@ -1,4 +1,4 @@
-package model.entity;
+package model.Enum;
 
 public enum FaseVacina {
 	SOMENTE_PESQUISADOR

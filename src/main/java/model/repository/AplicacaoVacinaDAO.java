@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.repository.Banco;
+import model.Enum.NotaAplicacaoVacina;
 import model.entity.AplicacaoVacinaVO;
 import model.entity.VacinaVO;
 
@@ -34,7 +35,7 @@ public class AplicacaoVacinaDAO {
 			stmt.setInt(1, novaAplicacaoVacina.getIdVacina().getIdVacina());
 			stmt.setInt(2, novaAplicacaoVacina.getIdPessoa());
 			stmt.setDate(3, java.sql.Date.valueOf(novaAplicacaoVacina.getDataAplicacao()));
-			stmt.setInt(4, novaAplicacaoVacina.getNota());
+			stmt.setString(4, novaAplicacaoVacina.getNota().toString());
 			
 			stmt.executeUpdate();
 			
@@ -68,7 +69,7 @@ public class AplicacaoVacinaDAO {
 			stmt.setInt(1, atualizarAplicacaoVacina.getIdVacina().getIdVacina());
 			stmt.setInt(2, atualizarAplicacaoVacina.getIdPessoa());
 			stmt.setDate(3, java.sql.Date.valueOf(atualizarAplicacaoVacina.getDataAplicacao()));
-			stmt.setInt(4, atualizarAplicacaoVacina.getNota());
+			stmt.setString(4, atualizarAplicacaoVacina.getNota().toString());
 			stmt.setInt(5, atualizarAplicacaoVacina.getIdAplicacaoVacina());
 
 			
@@ -188,7 +189,7 @@ public class AplicacaoVacinaDAO {
 		AplicacaoVacinaVO aplicacaoVacina = new AplicacaoVacinaVO();
 		aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
 		aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO").toLocalDate());
-		aplicacaoVacina.setNota(resultadoConsulta.getInt("NOTA"));
+		aplicacaoVacina.setNota(NotaAplicacaoVacina.getNotaAplicacaoVacina(resultadoConsulta.getString("NOTA")));
 		aplicacaoVacina.setIdPessoa(resultadoConsulta.getInt("IDPESSOA"));
 		
 		VacinaDAO vDao = new VacinaDAO();

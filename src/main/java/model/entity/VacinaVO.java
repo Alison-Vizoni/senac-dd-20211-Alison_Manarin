@@ -2,17 +2,20 @@ package model.entity;
 
 import java.time.LocalDate;
 
+import model.Enum.EstagioPesquisa;
+import model.Enum.FaseVacina;
+
 public class VacinaVO {	
 	private Integer idVacina;
 	private String nome;
 	private String paisDeOrigem;
-	private String estagioPesquisa;
+	private EstagioPesquisa estagioPesquisa;
 	private LocalDate dataInicioPesquisa;
 	private PessoaVO pesquisadorResponsavel;
 	private FaseVacina fase;
 	private int quantidadeDoses;
-	
-	public VacinaVO(Integer idVacina, String nome, String paisDeOrigem, String estagioPesquisa,
+
+	public VacinaVO(Integer idVacina, String nome, String paisDeOrigem, EstagioPesquisa estagioPesquisa,
 			LocalDate dataInicioPesquisa, PessoaVO pesquisadorResponsavel, FaseVacina fase, int quantidadeDoses) {
 		super();
 		this.idVacina = idVacina;
@@ -61,11 +64,11 @@ public class VacinaVO {
 		this.paisDeOrigem = paisDeOrigem;
 	}
 
-	public String getEstagioPesquisa() {
+	public EstagioPesquisa getEstagioPesquisa() {
 		return estagioPesquisa;
 	}
 
-	public void setEstagioPesquisa(String estagioPesquisa) {
+	public void setEstagioPesquisa(EstagioPesquisa estagioPesquisa) {
 		this.estagioPesquisa = estagioPesquisa;
 	}
 

@@ -7,7 +7,8 @@ import javax.swing.JOptionPane;
 
 import Controller.ControladoraVacina;
 import Util.StringUtil;
-import model.entity.FaseVacina;
+import model.Enum.EstagioPesquisa;
+import model.Enum.FaseVacina;
 import model.entity.PessoaVO;
 import model.entity.VacinaVO;
 import model.repository.PessoaDAO;
@@ -23,6 +24,11 @@ public class MenuVacina {
 	private static final int OPCAO_VACINA_VOLUNTARIOS = 2;
 	private static final int OPCAO_VACINA_PUBLICO_GERAL = 3;
 	private static final int OPCAO_VACINA_FIM = 99;
+	
+	private static final int OPCAO_ESTAGIO_INICIAL = 1;
+	private static final int OPCAO_ESTAGIO_TESTES = 2;
+	private static final int OPCAO_ESTAGIO_APLICACAO_MASSIVA = 3;
+	private static final int OPCAO_ESTAGIO_FIM = 99;
 
 	public void apresentarMenuVacina() {
 		int opcao = this.apresentarOpcoesMenu();
@@ -41,21 +47,20 @@ public class MenuVacina {
 					break;
 				}
 				default: {
-					System.out.println("\nOpção inválida!");
+					JOptionPane.showMessageDialog(null, "\nOpção inválida!");
 				}
 			}
 			opcao = this.apresentarOpcoesMenu();
 		}
-		
 	}
 
 	private int apresentarOpcoesMenu() {
 		StringBuilder msg = new StringBuilder();
-		msg.append("\nOpções:");
-		msg.append(OPCAO_MENU_CADASTRAR_VACINA + " - Cadastrar Vacina");
-		msg.append(OPCAO_MENU_CONSULTAR_VACINA + " - Consultar Vacina");
-		msg.append(OPCAO_MENU_EXCLUIR_VACINA + " - Excluir Vacina");
-		msg.append(OPCAO_MENU_VACINA_VOLTAR + " - Voltar");
+		msg.append("Opções:\n");
+		msg.append(OPCAO_MENU_CADASTRAR_VACINA + " - Cadastrar Vacina\n");
+		msg.append(OPCAO_MENU_CONSULTAR_VACINA + " - Consultar Vacina\n");
+		msg.append(OPCAO_MENU_EXCLUIR_VACINA + " - Excluir Vacina\n");
+		msg.append(OPCAO_MENU_VACINA_VOLTAR + " - Voltar\n");
 		msg.append("\nDigite a opção: ");
 		
 		String valorInformadoPeloUsuario = JOptionPane.showInputDialog(null, msg, "Menu Vacina",
@@ -79,10 +84,32 @@ public class MenuVacina {
 		String paisInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Pais de Origem");
 		vacinaVO.setPaisDeOrigem(paisInformadoPeloUsuario);
 		
-		String estagioInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Estagio da Pesquisa");
-		vacinaVO.setEstagioPesquisa(estagioInformadoPeloUsuario);
+		int estagio = this.apresentarOpcoesEstagio();
+		while(estagio != OPCAO_ESTAGIO_FIM) {
+			switch(estagio) {
+			case OPCAO_ESTAGIO_INICIAL: {
+				estagio = OPCAO_ESTAGIO_FIM;
+				vacinaVO.setEstagioPesquisa(EstagioPesquisa.INICIAL);
+				break;
+			}
+			case OPCAO_ESTAGIO_TESTES: {
+				estagio = OPCAO_ESTAGIO_FIM;
+				vacinaVO.setEstagioPesquisa(EstagioPesquisa.TESTES);
+				break;
+			}
+			case OPCAO_ESTAGIO_APLICACAO_MASSIVA: {
+				estagio = OPCAO_ESTAGIO_FIM;
+				vacinaVO.setEstagioPesquisa(EstagioPesquisa.APLICACAO_MASSIVA);
+				break;
+			}
+			default: {
+				JOptionPane.showMessageDialog(null, "\nOpção inválida!");
+				estagio = this.apresentarOpcoesEstagio();
+			}
+			}
+		}
 		
-		LocalDate dataInformadoPeloUsuario = LocalDate.parse(JOptionPane.showInputDialog(null, "Digite o Nome"));
+		LocalDate dataInformadoPeloUsuario = LocalDate.parse(JOptionPane.showInputDialog(null, "Digite a Data de Inicio da Pesquisa"));
 		vacinaVO.setDataInicioPesquisa(dataInformadoPeloUsuario);
 		
 		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
@@ -90,7 +117,7 @@ public class MenuVacina {
 //		String pesquisadorInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Nome");
 		vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario);
 		
-		int dosesInformadoPeloUsuario = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite o Nome"));
+		int dosesInformadoPeloUsuario = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a quantidade de doses"));
 		vacinaVO.setQuantidadeDoses(dosesInformadoPeloUsuario);
 		
 		int opcao = this.apresentarOpcoesFaseVacina();
@@ -112,7 +139,7 @@ public class MenuVacina {
 					break;
 				}
 				default: {
-					System.out.println("\nOpção inválida!");
+					JOptionPane.showMessageDialog(null, "\nOpção inválida!");
 					opcao = this.apresentarOpcoesFaseVacina();
 				}
 			}
@@ -122,7 +149,7 @@ public class MenuVacina {
 		String resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
 		System.out.println(resultado);
 	}
-	
+
 	private void consultarTodasVacina() {
 		// TODO Auto-generated method stub
 		
@@ -132,16 +159,36 @@ public class MenuVacina {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private int apresentarOpcoesEstagio() {
+		StringBuilder msg = new StringBuilder();
+		msg.append("\nOpções:\n");
+		msg.append(OPCAO_ESTAGIO_INICIAL + " - INICIAL\n");
+		msg.append(OPCAO_ESTAGIO_TESTES + " - TESTES\n");
+		msg.append(OPCAO_ESTAGIO_APLICACAO_MASSIVA + " - APLICACAO_MASSIVA\n");
+		msg.append("\nDigite a opção:");
+		
+		String valorInformadoPeloUsuario = JOptionPane.showInputDialog(null, msg, "Estagio Pesquisa",
+				JOptionPane.INFORMATION_MESSAGE);
+
+		int opcaoSelecionada = StringUtil.formatarStringParaInteiro(valorInformadoPeloUsuario);
+		
+		if(opcaoSelecionada == StringUtil.VALOR_INVALIDO) {
+			this.apresentarOpcoesMenu();
+		}
+		
+		return opcaoSelecionada;
+	}
 
 	private int apresentarOpcoesFaseVacina() {
 		StringBuilder msg = new StringBuilder();
-		msg.append("\nOpções:");
-		msg.append(OPCAO_VACINA_SOMENTE_PESQUISADOR + " - Somete pesquisador");
-		msg.append(OPCAO_VACINA_VOLUNTARIOS + " - Voluntarios");
-		msg.append(OPCAO_VACINA_PUBLICO_GERAL + " - Publico geral");
-		msg.append("\nDigite a opção: ");
+		msg.append("Opções:\n");
+		msg.append(OPCAO_VACINA_SOMENTE_PESQUISADOR + " - Somete pesquisador\n");
+		msg.append(OPCAO_VACINA_VOLUNTARIOS + " - Voluntarios\n");
+		msg.append(OPCAO_VACINA_PUBLICO_GERAL + " - Publico geral\n");
+		msg.append("\nDigite a opção:");
 
-		String valorInformadoPeloUsuario = JOptionPane.showInputDialog(null, msg, "Menu Vacina",
+		String valorInformadoPeloUsuario = JOptionPane.showInputDialog(null, msg, "Fase vacina",
 				JOptionPane.INFORMATION_MESSAGE);
 
 		int opcaoSelecionada = StringUtil.formatarStringParaInteiro(valorInformadoPeloUsuario);
