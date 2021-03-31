@@ -2,14 +2,14 @@ package model.entity;
 
 import java.time.LocalDate;
 
-public class AplicacaoVacina {
-	private int idAplicacaoVacina;
-	private Vacina idVacina;
+public class AplicacaoVacinaVO {
+	private Integer idAplicacaoVacina;
+	private VacinaVO idVacina;
 	private int idPessoa;
 	private LocalDate dataAplicacao;
 	private int nota;
 
-	public AplicacaoVacina(Vacina idVacina, int idPessoa, LocalDate dataAplicacao, int nota) {
+	public AplicacaoVacinaVO(VacinaVO idVacina, int idPessoa, LocalDate dataAplicacao, int nota) {
 		super();
 		this.idVacina = idVacina;
 		this.idPessoa = idPessoa;
@@ -17,23 +17,23 @@ public class AplicacaoVacina {
 		this.nota = nota;
 	}
 
-	public AplicacaoVacina() {
+	public AplicacaoVacinaVO() {
 		super();
 	}
 
-	public int getIdAplicacaoVacina() {
+	public Integer getIdAplicacaoVacina() {
 		return idAplicacaoVacina;
 	}
 
-	public void setIdAplicacaoVacina(int idAplicacaoVacina) {
+	public void setIdAplicacaoVacina(Integer idAplicacaoVacina) {
 		this.idAplicacaoVacina = idAplicacaoVacina;
 	}
 
-	public Vacina getIdVacina() {
+	public VacinaVO getIdVacina() {
 		return idVacina;
 	}
 
-	public void setIdVacina(Vacina idVacina) {
+	public void setIdVacina(VacinaVO idVacina) {
 		this.idVacina = idVacina;
 	}
 	

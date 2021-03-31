@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import model.repository.Banco;
 import model.repository.AplicacaoVacinaDAO;
-import model.entity.Pessoa;
-import model.entity.AplicacaoVacina;
+import model.entity.PessoaVO;
+import model.entity.AplicacaoVacinaVO;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class PessoaDAO {
 	 * 
 	 * @return pessoa cadastrada com a PK
 	 */
-	public Pessoa cadastrarPessoa(Pessoa novaPessoa) {
+	public PessoaVO cadastrarPessoa(PessoaVO novaPessoa) {
 		String sql = "INSERT INTO PESSOA ( NOME, DATA_NASCIMENTO, SEXO, CPF, TIPO ) VALUES ( ?, ?, ?, ?, ? )";
 		
 		try (Connection conn = Banco.getConnection();
@@ -57,7 +57,7 @@ public class PessoaDAO {
 	 * 
 	 * @return Se o registro foi realizado ou nao na tabela PESSOA
 	 */
-	public boolean atualizarPessoa(Pessoa atualizarPessoa) {
+	public boolean atualizarPessoa(PessoaVO atualizarPessoa) {
 		
 		boolean atualizou = false;
 		
@@ -117,9 +117,9 @@ public class PessoaDAO {
 	 * 
 	 * @return A pessoa buscada na Database
 	 */
-	public Pessoa consutarPessoaPorId(Integer idPessoa) {
+	public PessoaVO consutarPessoaPorId(Integer idPessoa) {
 		
-		Pessoa pessoaConsultada = null;
+		PessoaVO pessoaConsultada = null;
 		
 		String sql = "SELECT * FROM PESSOA WHERE IDPESSOA = ?";
 		
@@ -144,9 +144,9 @@ public class PessoaDAO {
 	 * 
 	 * @return Todos os clientes registrados na Database
 	 */
-	public List<Pessoa> consutarTodasPessoas() {
+	public List<PessoaVO> consutarTodasPessoas() {
 		
-		List<Pessoa> todasPessoas = new ArrayList<Pessoa>();
+		List<PessoaVO> todasPessoas = new ArrayList<PessoaVO>();
 		
 		String sql = "SELECT * FROM PESSOA";
 		
@@ -156,7 +156,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				Pessoa pessoa = this.converterDoResultSet(resultadoConsulta);
+				PessoaVO pessoa = this.converterDoResultSet(resultadoConsulta);
 
 				todasPessoas.add(pessoa);
 			}
@@ -167,8 +167,8 @@ public class PessoaDAO {
 		return todasPessoas;
 	}
 	
-	private Pessoa converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
-		Pessoa pessoaConsultada = new Pessoa();
+	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+		PessoaVO pessoaConsultada = new PessoaVO();
 		pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
 		pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
 		pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO").toLocalDate());
@@ -177,7 +177,7 @@ public class PessoaDAO {
 		pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
 		
 		AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
-		List<AplicacaoVacina> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
+		List<AplicacaoVacinaVO> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
 		pessoaConsultada.setVacinacoes(aplicacoes);
 		
 		return pessoaConsultada;

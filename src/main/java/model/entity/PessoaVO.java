@@ -8,17 +8,17 @@ import java.util.List;
  * @author Alison
  *
  */
-public class Pessoa {
+public class PessoaVO {
 	private int idPessoa;
 	private String nome;
 	private LocalDate dataNascimento;
 	private char sexo;
 	private String cpf;
 	private int tipo;
-	private List<AplicacaoVacina> vacinacoes;
+	private List<AplicacaoVacinaVO> vacinacoes;
 	
-	public Pessoa(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
-			List<AplicacaoVacina> vacinacoes) {
+	public PessoaVO(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
+			List<AplicacaoVacinaVO> vacinacoes) {
 		super();
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
@@ -28,7 +28,7 @@ public class Pessoa {
 		this.vacinacoes = vacinacoes;
 	}
 	
-	public Pessoa() {
+	public PessoaVO() {
 		super();
 	}
 
@@ -95,11 +95,11 @@ public class Pessoa {
 		this.tipo = tipo;
 	}
 
-	public List<AplicacaoVacina> getVacinacoes() {
+	public List<AplicacaoVacinaVO> getVacinacoes() {
 		return vacinacoes;
 	}
 
-	public void setVacinacoes(List<AplicacaoVacina> vacinacoes) {
+	public void setVacinacoes(List<AplicacaoVacinaVO> vacinacoes) {
 		this.vacinacoes = vacinacoes;
 	}
 	

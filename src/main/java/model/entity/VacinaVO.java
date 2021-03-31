@@ -2,19 +2,20 @@ package model.entity;
 
 import java.time.LocalDate;
 
-public class Vacina {	
+public class VacinaVO {	
 	private Integer idVacina;
 	private String nome;
 	private String paisDeOrigem;
 	private String estagioPesquisa;
 	private LocalDate dataInicioPesquisa;
-	private Pessoa pesquisadorResponsavel;
-	private int fase;
+	private PessoaVO pesquisadorResponsavel;
+	private FaseVacina fase;
 	private int quantidadeDoses;
-
-	public Vacina(String nome, String paisDeOrigem, String estagioPesquisa,
-			LocalDate dataInicioPesquisa, Pessoa pesquisadorResponsavel, int fase, int quantidadeDoses) {
+	
+	public VacinaVO(Integer idVacina, String nome, String paisDeOrigem, String estagioPesquisa,
+			LocalDate dataInicioPesquisa, PessoaVO pesquisadorResponsavel, FaseVacina fase, int quantidadeDoses) {
 		super();
+		this.idVacina = idVacina;
 		this.nome = nome;
 		this.paisDeOrigem = paisDeOrigem;
 		this.estagioPesquisa = estagioPesquisa;
@@ -23,8 +24,8 @@ public class Vacina {
 		this.fase = fase;
 		this.quantidadeDoses = quantidadeDoses;
 	}
-	
-	public Vacina() {
+
+	public VacinaVO() {
 		super();
 	}
 
@@ -76,19 +77,19 @@ public class Vacina {
 		this.dataInicioPesquisa = dataInicioPesquisa;
 	}
 
-	public Pessoa getPesquisadorResponsavel() {
+	public PessoaVO getPesquisadorResponsavel() {
 		return pesquisadorResponsavel;
 	}
 
-	public void setPesquisadorResponsavel(Pessoa pesquisadorResponsavel) {
+	public void setPesquisadorResponsavel(PessoaVO pesquisadorResponsavel) {
 		this.pesquisadorResponsavel = pesquisadorResponsavel;
 	}
 
-	public int getFase() {
+	public FaseVacina getFase() {
 		return fase;
 	}
 
-	public void setFase(int fase) {
+	public void setFase(FaseVacina fase) {
 		this.fase = fase;
 	}
 

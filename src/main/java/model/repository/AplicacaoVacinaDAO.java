@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.repository.Banco;
-import model.entity.AplicacaoVacina;
-import model.entity.Vacina;
+import model.entity.AplicacaoVacinaVO;
+import model.entity.VacinaVO;
 
 /**
  * 
@@ -25,7 +25,7 @@ public class AplicacaoVacinaDAO {
 	 * 
 	 * @return A aplicacao vacina cadastrada na Database
 	 */
-	public AplicacaoVacina cadastrarAplicacaoVacina(AplicacaoVacina novaAplicacaoVacina) {
+	public AplicacaoVacinaVO cadastrarAplicacaoVacina(AplicacaoVacinaVO novaAplicacaoVacina) {
 		
 		String sql = "INSERT INTO APLICACAO_VACINA (IDVACINA, IDPESSOA, DATA_APLICACAO, NOTA) VALUES ( ?, ?, ?, ? )";
 		
@@ -57,7 +57,7 @@ public class AplicacaoVacinaDAO {
 	 * 
 	 * @return Se o registro foi atualizado na tabela ou não
 	 */
-	public boolean atualizarAplicacaoVacina(AplicacaoVacina atualizarAplicacaoVacina) {
+	public boolean atualizarAplicacaoVacina(AplicacaoVacinaVO atualizarAplicacaoVacina) {
 		
 		boolean atualizou = false;
 	
@@ -115,9 +115,9 @@ public class AplicacaoVacinaDAO {
 	 * 
 	 * @return Se o registro foi consultado ou não
 	 */
-	public AplicacaoVacina consultarAplicacaoVacinaPorId(Integer idAplicacaoVacina) {
+	public AplicacaoVacinaVO consultarAplicacaoVacinaPorId(Integer idAplicacaoVacina) {
 		
-		AplicacaoVacina aplicacaoVacinaConsultada = null;
+		AplicacaoVacinaVO aplicacaoVacinaConsultada = null;
 		
 		String sql = "SELECT * FROM APLICACAO_VACINA WHERE ID_APLICACAO_VACINA = ?";
 
@@ -142,9 +142,9 @@ public class AplicacaoVacinaDAO {
 	 * 
 	 * @return Retorna todas as aplicações de vacinas existentes
 	 */
-	public List<AplicacaoVacina> consultarAplicacaoVacina() {
+	public List<AplicacaoVacinaVO> consultarAplicacaoVacina() {
 		
-		List<AplicacaoVacina> todasAplicacaoVacina = new ArrayList<AplicacaoVacina>();
+		List<AplicacaoVacinaVO> todasAplicacaoVacina = new ArrayList<AplicacaoVacinaVO>();
 		
 		String sql = "SELECT * FROM APLICACAO_VACINA";
 
@@ -154,7 +154,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				AplicacaoVacina aplicacaoVacina = this.converterDoResultSet(resultadoConsulta);
+				AplicacaoVacinaVO aplicacaoVacina = this.converterDoResultSet(resultadoConsulta);
 				
 				todasAplicacaoVacina.add(aplicacaoVacina);
 			}
@@ -164,8 +164,8 @@ public class AplicacaoVacinaDAO {
 		return todasAplicacaoVacina;
 	}
 	
-	public List<AplicacaoVacina> consultarAplicacaoVacinaPorIdPessoa(Integer idPessoa) {
-		List<AplicacaoVacina> aplicacoes = new ArrayList<AplicacaoVacina>();
+	public List<AplicacaoVacinaVO> consultarAplicacaoVacinaPorIdPessoa(Integer idPessoa) {
+		List<AplicacaoVacinaVO> aplicacoes = new ArrayList<AplicacaoVacinaVO>();
 		
 		String sql = "SELECT * FROM APLICACAO_VACINA WHERE IDPESSOA = ?";
 
@@ -175,7 +175,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				AplicacaoVacina aplicacao = this.converterDoResultSet(resultadoConsulta);
+				AplicacaoVacinaVO aplicacao = this.converterDoResultSet(resultadoConsulta);
 				aplicacoes.add(aplicacao);
 			}
 		} catch (SQLException e) {
@@ -184,15 +184,15 @@ public class AplicacaoVacinaDAO {
 		return aplicacoes;
 	}
 	
-	private AplicacaoVacina converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
-		AplicacaoVacina aplicacaoVacina = new AplicacaoVacina();
+	private AplicacaoVacinaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+		AplicacaoVacinaVO aplicacaoVacina = new AplicacaoVacinaVO();
 		aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
 		aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO").toLocalDate());
 		aplicacaoVacina.setNota(resultadoConsulta.getInt("NOTA"));
 		aplicacaoVacina.setIdPessoa(resultadoConsulta.getInt("IDPESSOA"));
 		
 		VacinaDAO vDao = new VacinaDAO();
-		Vacina vacinaAplicada = vDao.consultarVacinaPorId(resultadoConsulta.getInt("IDVACINA"));
+		VacinaVO vacinaAplicada = vDao.consultarVacinaPorId(resultadoConsulta.getInt("IDVACINA"));
 		aplicacaoVacina.setIdVacina(vacinaAplicada);
 		return aplicacaoVacina;
 	}

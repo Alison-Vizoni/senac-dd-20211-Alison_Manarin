@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.repository.PessoaDAO;
-import model.entity.Vacina;
-import model.entity.Pessoa;
+import model.entity.VacinaVO;
+import model.entity.PessoaVO;
 
 public class VacinaDAO {
 	
@@ -20,7 +20,7 @@ public class VacinaDAO {
 	 * 
 	 * @return A vacina com a PK cadastrada no banco.
 	 */
-	public Vacina cadastrarVacina(Vacina novaVacina) {
+	public VacinaVO cadastrarVacina(VacinaVO novaVacina) {
 		String sql = " INSERT INTO VACINA ( NOME, PAIS_ORDIGEM, ESTAGIO_PESQUISA, DATA_INICIO_PESQUISA,"
 				+ " ID_PESQUISADOR_RESPONSAVEL, FASE, QUANTIDADE_DOSES )"
 				+ " VALUES ( ?, ?, ?, ?, ?, ?, ? )";
@@ -56,7 +56,7 @@ public class VacinaDAO {
 	 * 
 	 * @return se o registro foi ou nao atualizado na tabela
 	 */
-	public boolean atualizarVacina(Vacina atualizarVacina) {
+	public boolean atualizarVacina(VacinaVO atualizarVacina) {
 		
 		boolean atualizou = false;
 		
@@ -119,9 +119,9 @@ public class VacinaDAO {
 	 * 
 	 * @return A vacina buscada.
 	 */
-	public Vacina consultarVacinaPorId(Integer idVacina) {
+	public VacinaVO consultarVacinaPorId(Integer idVacina) {
 		
-		Vacina vacinaConsultada = null;
+		VacinaVO vacinaConsultada = null;
 		
 		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
 		
@@ -147,9 +147,9 @@ public class VacinaDAO {
 	 * 
 	 * @return Retorna todas as vacinas cadastradas na Database.
 	 */
-	public List<Vacina> consultarTodasVacinas() {
+	public List<VacinaVO> consultarTodasVacinas() {
 		
-		List<Vacina> todasVacinas = new ArrayList<Vacina>();
+		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
 		
 		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
 		
@@ -161,7 +161,7 @@ public class VacinaDAO {
 			
 			while (resultadoConsulta.next()) {
 				
-				Vacina vacina = this.converterDoResultSet(resultadoConsulta);
+				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta);
 				
 				todasVacinas.add(vacina);
 				}
@@ -172,8 +172,8 @@ public class VacinaDAO {
 		return todasVacinas;
 	}
 
-	private Vacina converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
-		Vacina vacinaConsultada = new Vacina();
+	private VacinaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+		VacinaVO vacinaConsultada = new VacinaVO();
 		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
 		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
@@ -181,7 +181,7 @@ public class VacinaDAO {
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 		
 		PessoaDAO pDAO = new PessoaDAO();
-		Pessoa responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
+		PessoaVO responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
 		vacinaConsultada.setPesquisadorResponsavel(responsavel);
 		
 		vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
