@@ -101,5 +101,4 @@ public class VacinaVO {
 		this.quantidadeDoses = quantidadeDoses;
 	}
 	
-	
 }

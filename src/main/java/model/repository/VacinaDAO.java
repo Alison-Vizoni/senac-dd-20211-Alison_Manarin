@@ -9,6 +9,7 @@ import java.util.List;
 
 import model.repository.PessoaDAO;
 import model.entity.VacinaVO;
+import model.entity.FaseVacina;
 import model.entity.PessoaVO;
 
 public class VacinaDAO {
@@ -32,7 +33,7 @@ public class VacinaDAO {
 			stmt.setString(3, novaVacina.getEstagioPesquisa());
 			stmt.setDate(4, java.sql.Date.valueOf(novaVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, novaVacina.getPesquisadorResponsavel().getIdPessoa());
-			stmt.setInt(6, novaVacina.getFase());
+			stmt.setString(6, novaVacina.getFase().toString());
 			stmt.setInt(7, novaVacina.getQuantidadeDoses());
 			
 			stmt.executeUpdate();
@@ -71,7 +72,7 @@ public class VacinaDAO {
 			stmt.setString(3, atualizarVacina.getEstagioPesquisa());
 			stmt.setDate(4, java.sql.Date.valueOf(atualizarVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel().getIdPessoa());
-			stmt.setInt(6, atualizarVacina.getFase());
+			stmt.setString(6, atualizarVacina.getFase().toString());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
 			stmt.setInt(8, atualizarVacina.getIdVacina());
 			
@@ -184,7 +185,7 @@ public class VacinaDAO {
 		PessoaVO responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
 		vacinaConsultada.setPesquisadorResponsavel(responsavel);
 		
-		vacinaConsultada.setFase(resultadoConsulta.getInt("fase"));
+		vacinaConsultada.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("fase")));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
 		
 		return vacinaConsultada;
