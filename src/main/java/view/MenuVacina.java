@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import Controller.ControladoraVacina;
 import Util.StringUtil;
+import jdk.nashorn.internal.scripts.JO;
 import model.Enum.EstagioPesquisa;
 import model.Enum.FaseVacina;
 import model.entity.PessoaVO;
@@ -87,25 +88,25 @@ public class MenuVacina {
 		int estagio = this.apresentarOpcoesEstagio();
 		while(estagio != OPCAO_ESTAGIO_FIM) {
 			switch(estagio) {
-			case OPCAO_ESTAGIO_INICIAL: {
-				estagio = OPCAO_ESTAGIO_FIM;
-				vacinaVO.setEstagioPesquisa(EstagioPesquisa.INICIAL);
-				break;
-			}
-			case OPCAO_ESTAGIO_TESTES: {
-				estagio = OPCAO_ESTAGIO_FIM;
-				vacinaVO.setEstagioPesquisa(EstagioPesquisa.TESTES);
-				break;
-			}
-			case OPCAO_ESTAGIO_APLICACAO_MASSIVA: {
-				estagio = OPCAO_ESTAGIO_FIM;
-				vacinaVO.setEstagioPesquisa(EstagioPesquisa.APLICACAO_MASSIVA);
-				break;
-			}
-			default: {
-				JOptionPane.showMessageDialog(null, "\nOpção inválida!");
-				estagio = this.apresentarOpcoesEstagio();
-			}
+				case OPCAO_ESTAGIO_INICIAL: {
+					estagio = OPCAO_ESTAGIO_FIM;
+					vacinaVO.setEstagioPesquisa(EstagioPesquisa.INICIAL);
+					break;
+				}
+				case OPCAO_ESTAGIO_TESTES: {
+					estagio = OPCAO_ESTAGIO_FIM;
+					vacinaVO.setEstagioPesquisa(EstagioPesquisa.TESTES);
+					break;
+				}
+				case OPCAO_ESTAGIO_APLICACAO_MASSIVA: {
+					estagio = OPCAO_ESTAGIO_FIM;
+					vacinaVO.setEstagioPesquisa(EstagioPesquisa.APLICACAO_MASSIVA);
+					break;
+				}
+				default: {
+					JOptionPane.showMessageDialog(null, "\nOpção inválida!");
+					estagio = this.apresentarOpcoesEstagio();
+				}
 			}
 		}
 		
@@ -147,17 +148,26 @@ public class MenuVacina {
 		
 		ControladoraVacina controladoraVacina = new ControladoraVacina();
 		String resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
-		System.out.println(resultado);
+		JOptionPane.showMessageDialog(null, resultado);
 	}
 
 	private void consultarTodasVacina() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	private void excluirVacina() {
-		// TODO Auto-generated method stub
+		VacinaVO vacinaVO = new VacinaVO();
 		
+		String nome = JOptionPane.showInputDialog(null, "Dgite o nome da vacina a ser excluida");
+		vacinaVO.setNome(nome);
+		
+		String paisOrigem = JOptionPane.showInputDialog(null, "Digite o nome do pais de origem da vacina a ser excluida");
+		vacinaVO.setPaisDeOrigem(paisOrigem);
+		
+		ControladoraVacina controladoraVacina = new ControladoraVacina();
+		String resultado = controladoraVacina.excluirVacinaController(vacinaVO);
+		JOptionPane.showMessageDialog(null, resultado);
 	}
 	
 	private int apresentarOpcoesEstagio() {

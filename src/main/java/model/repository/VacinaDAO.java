@@ -23,7 +23,7 @@ public class VacinaDAO {
 	 * @return A vacina com a PK cadastrada no banco.
 	 */
 	public VacinaVO cadastrarVacina(VacinaVO novaVacina) {
-		String sql = " INSERT INTO VACINA ( NOME, PAIS_ORDIGEM, ESTAGIO_PESQUISA, DATA_INICIO_PESQUISA,"
+		String sql = " INSERT INTO VACINA ( NOME, PAIS_ORIGEM, ESTAGIO_PESQUISA, DATA_INICIO_PESQUISA,"
 				+ " ID_PESQUISADOR_RESPONSAVEL, FASE, QUANTIDADE_DOSES )"
 				+ " VALUES ( ?, ?, ?, ?, ?, ?, ? )";
 		
@@ -62,7 +62,7 @@ public class VacinaDAO {
 		
 		boolean atualizou = false;
 		
-		String sql = " UPDATE VACINA SET NOME = ?, PAIS_ORDIGEM = ?, ESTAGIO_PESQUISA = ?, DATA_INICIO_PESQUISA = ?,"
+		String sql = " UPDATE VACINA SET NOME = ?, PAIS_ORIGEM = ?, ESTAGIO_PESQUISA = ?, DATA_INICIO_PESQUISA = ?,"
 				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?"
 				+ " WHERE IDVACINA = ?";
 		
@@ -134,11 +134,10 @@ public class VacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				
 				vacinaConsultada = this.converterDoResultSet(resultadoConsulta);
 				}
 		} catch (SQLException e) {
-			System.out.println("Erro ao atualizar vacina: \n " + e.getMessage());
+			System.out.println("Erro ao consultar vacina por IDVACINA: \n " + e.getMessage());
 		}
 
 		return vacinaConsultada;
@@ -153,12 +152,11 @@ public class VacinaDAO {
 		
 		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
 		
-		String sql = " SELECT * FROM VACINA WHERE IDVACINA = ?";
+		String sql = " SELECT * FROM VACINA";
 		
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
 	
-			
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
@@ -178,7 +176,7 @@ public class VacinaDAO {
 		VacinaVO vacinaConsultada = new VacinaVO();
 		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
-		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORDIGEM"));
+		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORIGEM"));
 		vacinaConsultada.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 		
@@ -192,4 +190,40 @@ public class VacinaDAO {
 		return vacinaConsultada;
 	}
 	
+	/**
+	 * Consulta a existencia de vacinas na tabela VACINA, filtrando pelo nome AND pais_origem
+	 * 
+	 * @param vacinaVO
+	 * 
+	 * @return 
+	 */
+	public VacinaVO consultarVacinaPorNomeAndPais(String nome, String pais) {
+		
+		VacinaVO vacinaVO = new VacinaVO();
+		
+		String sql = " SELECT * FROM VACINA WHERE UPPER(NOME) = ? AND UPPER(PAIS_ORIGEM) = ? ";
+		
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
+			stmt.setString(1, nome);
+			stmt.setString(2, pais);
+			
+			ResultSet resultadoConsulta = stmt.executeQuery();
+
+			while (resultadoConsulta.next()) {
+				vacinaVO.setIdVacina(resultadoConsulta.getInt("IDVACINA"));
+				vacinaVO.setNome(resultadoConsulta.getString("NOME"));
+				vacinaVO.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORIGEM"));
+				vacinaVO.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
+				vacinaVO.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
+				vacinaVO.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("FASE")));
+				vacinaVO.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
+
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());
+		}
+		return vacinaVO;
+	}
 }
