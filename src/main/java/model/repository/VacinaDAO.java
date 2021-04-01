@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.repository.PessoaDAO;
-import model.entity.VacinaVO;
 import model.Enum.EstagioPesquisa;
 import model.Enum.FaseVacina;
 import model.entity.PessoaVO;
+import model.entity.VacinaVO;
+import model.repository.PessoaDAO;
 
 public class VacinaDAO {
 	

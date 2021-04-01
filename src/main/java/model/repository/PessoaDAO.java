@@ -6,10 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.repository.Banco;
-import model.repository.AplicacaoVacinaDAO;
-import model.entity.PessoaVO;
+
 import model.entity.AplicacaoVacinaVO;
+import model.entity.PessoaVO;
+import model.repository.AplicacaoVacinaDAO;
+import model.repository.Banco;
 
 /**
  * 

@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.repository.Banco;
 import model.Enum.NotaAplicacaoVacina;
 import model.entity.AplicacaoVacinaVO;
 import model.entity.VacinaVO;
+import model.repository.Banco;
 
 /**
  * 
