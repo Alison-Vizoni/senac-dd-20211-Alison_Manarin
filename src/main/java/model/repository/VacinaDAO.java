@@ -218,7 +218,7 @@ public class VacinaDAO {
 				vacinaVO.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 				vacinaVO.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("FASE")));
 				vacinaVO.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
-
+				
 			}
 			
 		} catch (SQLException e) {

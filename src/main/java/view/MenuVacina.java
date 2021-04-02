@@ -14,7 +14,7 @@ import model.entity.PessoaVO;
 import model.entity.VacinaVO;
 import model.repository.PessoaDAO;
 
-public class MenuVacina {
+public class MenuVacina { 
 	
 	private static final int OPCAO_MENU_CADASTRAR_VACINA = 1;
 	private static final int OPCAO_MENU_CONSULTAR_VACINA = 2;

@@ -16,7 +16,9 @@ public class VacinaBO {
 		String retorno = "";
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
-		if (vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem()) != null) {
+		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem());
+		
+		if (verificar.getIdVacina() != null && verificar.getIdVacina() != 0) {
 			retorno =  "Nome da Vacina já existente no pais, favor escolher outro nome.";
 		} else {
 			if (vacinaDAO.cadastrarVacina(vacinaVO) != null) {
@@ -32,8 +34,10 @@ public class VacinaBO {
 		String retorno = "";
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
-		if (vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem()) != null) {
-			if (vacinaDAO.excluirVacina(vacinaVO.getIdVacina())) {
+		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem());
+		
+		if (verificar.getIdVacina() != null) {
+			if (vacinaDAO.excluirVacina(verificar.getIdVacina())) {
 				retorno = "Vacina excluida com sucesso.";
 			} else {
 				retorno = "Não foi possivel excluir a vacina.";
