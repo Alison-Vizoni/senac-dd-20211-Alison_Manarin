@@ -16,17 +16,22 @@ public class VacinaBO {
 		String retorno = "";
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
-		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem());
+		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO);
 		
-		if (verificar.getIdVacina() != null && verificar.getIdVacina() != 0) {
-			retorno =  "Nome da Vacina já existente no pais, favor escolher outro nome.";
-		} else {
-			if (vacinaDAO.cadastrarVacina(vacinaVO) != null) {
-				retorno = "Vacina cadastrada com sucesso.";
+		if (verificar.getPesquisadorResponsavel().getIdPessoa() > 0) {
+			if (verificar.getIdVacina() != null && verificar.getIdVacina() != 0) {
+				retorno =  "Nome da Vacina já existente no pais, favor escolher outro nome.";
 			} else {
-				retorno = "Não foi possivel cadastrar vacina.";
+				if (vacinaDAO.cadastrarVacina(vacinaVO) != null) {
+					retorno = "Vacina cadastrada com sucesso.";
+				} else {
+					retorno = "Não foi possivel cadastrar vacina.";
+				}
 			}
+		} else {
+			retorno = "É necessario cadastrar um pesquisador responsavel primeiro";
 		}
+		
 		return retorno;
 	}
 
@@ -34,16 +39,18 @@ public class VacinaBO {
 		String retorno = "";
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
-		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO.getNome(), vacinaVO.getPaisDeOrigem());
+		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO);
 		
-		if (verificar.getIdVacina() != null) {
-			if (vacinaDAO.excluirVacina(verificar.getIdVacina())) {
-				retorno = "Vacina excluida com sucesso.";
+		if (verificar.getPesquisadorResponsavel() != null) {
+			if (verificar.getIdVacina() != null) {
+				if (vacinaDAO.excluirVacina(verificar.getIdVacina())) {
+					retorno = "Vacina excluida com sucesso.";
+				} else {
+					retorno = "Não foi possivel excluir a vacina.";
+				}
 			} else {
-				retorno = "Não foi possivel excluir a vacina.";
+				retorno = "Vacina ainda não foi cadastrada no banco.";
 			}
-		} else {
-			retorno = "Vacina ainda não foi cadastrada no banco.";
 		}
 		return retorno;
 	}

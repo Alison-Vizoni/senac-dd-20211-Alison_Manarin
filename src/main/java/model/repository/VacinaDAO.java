@@ -121,7 +121,7 @@ public class VacinaDAO {
 	 * 
 	 * @return A vacina buscada.
 	 */
-	public VacinaVO consultarVacinaPorId(Integer idVacina) {
+	public VacinaVO consultarVacinaPorId(Integer idVacina, boolean idPEsquisadorComVacina) {
 		
 		VacinaVO vacinaConsultada = null;
 		
@@ -134,7 +134,7 @@ public class VacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				vacinaConsultada = this.converterDoResultSet(resultadoConsulta);
+				vacinaConsultada = this.converterDoResultSet(resultadoConsulta, idPEsquisadorComVacina);
 				}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar vacina por IDVACINA: \n " + e.getMessage());
@@ -148,7 +148,7 @@ public class VacinaDAO {
 	 * 
 	 * @return Retorna todas as vacinas cadastradas na Database.
 	 */
-	public List<VacinaVO> consultarTodasVacinas() {
+	public List<VacinaVO> consultarTodasVacinas(boolean idPEsquisadorComVacina) {
 		
 		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
 		
@@ -161,7 +161,7 @@ public class VacinaDAO {
 			
 			while (resultadoConsulta.next()) {
 				
-				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta);
+				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta, idPEsquisadorComVacina);
 				
 				todasVacinas.add(vacina);
 				}
@@ -172,7 +172,7 @@ public class VacinaDAO {
 		return todasVacinas;
 	}
 
-	private VacinaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+	private VacinaVO converterDoResultSet(ResultSet resultadoConsulta, boolean idPEsquisadorComVacina) throws SQLException {
 		VacinaVO vacinaConsultada = new VacinaVO();
 		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
@@ -180,9 +180,11 @@ public class VacinaDAO {
 		vacinaConsultada.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
 		
-		PessoaDAO pDAO = new PessoaDAO();
-		PessoaVO responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
-		vacinaConsultada.setPesquisadorResponsavel(responsavel);
+		if (idPEsquisadorComVacina) {
+			PessoaDAO pDAO = new PessoaDAO();
+			PessoaVO responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"), false);
+			vacinaConsultada.setPesquisadorResponsavel(responsavel);
+		}
 		
 		vacinaConsultada.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("fase")));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
@@ -197,29 +199,20 @@ public class VacinaDAO {
 	 * 
 	 * @return 
 	 */
-	public VacinaVO consultarVacinaPorNomeAndPais(String nome, String pais) {
-		
-		VacinaVO vacinaVO = new VacinaVO();
+	public VacinaVO consultarVacinaPorNomeAndPais(VacinaVO vacinaVO) {
 		
 		String sql = " SELECT * FROM VACINA WHERE UPPER(NOME) = ? AND UPPER(PAIS_ORIGEM) = ? ";
 		
 		try (Connection conn = Banco.getConnection();
-				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
-			stmt.setString(1, nome);
-			stmt.setString(2, pais);
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+			stmt.setString(1, vacinaVO.getNome());
+			stmt.setString(2, vacinaVO.getPaisDeOrigem());
 			
 			ResultSet resultadoConsulta = stmt.executeQuery();
 
-			while (resultadoConsulta.next()) {
-				vacinaVO.setIdVacina(resultadoConsulta.getInt("IDVACINA"));
-				vacinaVO.setNome(resultadoConsulta.getString("NOME"));
-				vacinaVO.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORIGEM"));
-				vacinaVO.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
-				vacinaVO.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
-				vacinaVO.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("FASE")));
-				vacinaVO.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
-				
-			}
+			if (resultadoConsulta.next()) {
+				vacinaVO = this.converterDoResultSet(resultadoConsulta, true);
+				}
 			
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());

@@ -129,7 +129,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				aplicacaoVacinaConsultada = this.converterDoResultSet(resultadoConsulta);
+				aplicacaoVacinaConsultada = this.converterDoResultSet(resultadoConsulta, false);
 				
 			}
 		} catch (SQLException e) {
@@ -155,7 +155,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				AplicacaoVacinaVO aplicacaoVacina = this.converterDoResultSet(resultadoConsulta);
+				AplicacaoVacinaVO aplicacaoVacina = this.converterDoResultSet(resultadoConsulta, false);
 				
 				todasAplicacaoVacina.add(aplicacaoVacina);
 			}
@@ -176,7 +176,7 @@ public class AplicacaoVacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				AplicacaoVacinaVO aplicacao = this.converterDoResultSet(resultadoConsulta);
+				AplicacaoVacinaVO aplicacao = this.converterDoResultSet(resultadoConsulta, false);
 				aplicacoes.add(aplicacao);
 			}
 		} catch (SQLException e) {
@@ -185,7 +185,7 @@ public class AplicacaoVacinaDAO {
 		return aplicacoes;
 	}
 	
-	private AplicacaoVacinaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+	private AplicacaoVacinaVO converterDoResultSet(ResultSet resultadoConsulta, boolean idPEsquisadorComVacina) throws SQLException {
 		AplicacaoVacinaVO aplicacaoVacina = new AplicacaoVacinaVO();
 		aplicacaoVacina.setIdAplicacaoVacina(resultadoConsulta.getInt("ID_APLICACAO_VACINA"));
 		aplicacaoVacina.setDataAplicacao(resultadoConsulta.getDate("DATA_APLICACAO").toLocalDate());
@@ -193,7 +193,7 @@ public class AplicacaoVacinaDAO {
 		aplicacaoVacina.setIdPessoa(resultadoConsulta.getInt("IDPESSOA"));
 		
 		VacinaDAO vDao = new VacinaDAO();
-		VacinaVO vacinaAplicada = vDao.consultarVacinaPorId(resultadoConsulta.getInt("IDVACINA"));
+		VacinaVO vacinaAplicada = vDao.consultarVacinaPorId(resultadoConsulta.getInt("IDVACINA"), idPEsquisadorComVacina);
 		aplicacaoVacina.setIdVacina(vacinaAplicada);
 		return aplicacaoVacina;
 	}

@@ -114,7 +114,7 @@ public class MenuVacina {
 		vacinaVO.setDataInicioPesquisa(dataInformadoPeloUsuario);
 		
 		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
-		pesquisadorInformadoPeloUsuario.setIdPessoa(1);
+		pesquisadorInformadoPeloUsuario.setIdPessoa(2);
 //		String pesquisadorInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Nome");
 		vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario);
 		

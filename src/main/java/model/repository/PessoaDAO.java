@@ -118,7 +118,7 @@ public class PessoaDAO {
 	 * 
 	 * @return A pessoa buscada na Database
 	 */
-	public PessoaVO consutarPessoaPorId(Integer idPessoa) {
+	public PessoaVO consutarPessoaPorId(Integer idPessoa, boolean comVacina) {
 		
 		PessoaVO pessoaConsultada = null;
 		
@@ -131,7 +131,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				pessoaConsultada = this.converterDoResultSet(resultadoConsulta);
+				pessoaConsultada = this.converterDoResultSet(resultadoConsulta, comVacina);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar pessoa por idPessoa: \n" + e.getMessage());
@@ -145,7 +145,7 @@ public class PessoaDAO {
 	 * 
 	 * @return Todos os clientes registrados na Database
 	 */
-	public List<PessoaVO> consutarTodasPessoas() {
+	public List<PessoaVO> consutarTodasPessoas(boolean comVacina) {
 		
 		List<PessoaVO> todasPessoas = new ArrayList<PessoaVO>();
 		
@@ -157,7 +157,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				PessoaVO pessoa = this.converterDoResultSet(resultadoConsulta);
+				PessoaVO pessoa = this.converterDoResultSet(resultadoConsulta, comVacina);
 
 				todasPessoas.add(pessoa);
 			}
@@ -168,7 +168,7 @@ public class PessoaDAO {
 		return todasPessoas;
 	}
 	
-	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
+	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta, boolean comVacina) throws SQLException {
 		PessoaVO pessoaConsultada = new PessoaVO();
 		pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
 		pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
@@ -177,9 +177,11 @@ public class PessoaDAO {
 		pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));
 		pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
 		
-		AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
-		List<AplicacaoVacinaVO> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
-		pessoaConsultada.setVacinacoes(aplicacoes);
+		if (comVacina) {
+			AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
+			List<AplicacaoVacinaVO> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
+			pessoaConsultada.setVacinacoes(aplicacoes);
+		}
 		
 		return pessoaConsultada;
 	}

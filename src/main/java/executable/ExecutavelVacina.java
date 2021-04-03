@@ -1,4 +1,4 @@
-package Executavel;
+package executable;
 
 import view.MenuVacinacao;
 
