@@ -2,9 +2,11 @@ package view;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import Controller.ControladoraPessoa;
 import Controller.ControladoraVacina;
 import Util.StringUtil;
 import jdk.nashorn.internal.scripts.JO;
@@ -17,7 +19,7 @@ import model.repository.PessoaDAO;
 public class MenuVacina { 
 	
 	private static final int OPCAO_MENU_CADASTRAR_VACINA = 1;
-	private static final int OPCAO_MENU_CONSULTAR_VACINA = 2;
+	private static final int OPCAO_MENU_CONSULTAR_TODAS_VACINAS = 2;
 	private static final int OPCAO_MENU_EXCLUIR_VACINA = 3;
 	private static final int OPCAO_MENU_VACINA_VOLTAR = 4;
 	
@@ -39,7 +41,7 @@ public class MenuVacina {
 					this.cadastrarVacina();
 					break;
 				}
-				case OPCAO_MENU_CONSULTAR_VACINA: {
+				case OPCAO_MENU_CONSULTAR_TODAS_VACINAS: {
 					this.consultarTodasVacina();
 					break;
 				}
@@ -59,7 +61,7 @@ public class MenuVacina {
 		StringBuilder msg = new StringBuilder();
 		msg.append("Opções:\n");
 		msg.append(OPCAO_MENU_CADASTRAR_VACINA + " - Cadastrar Vacina\n");
-		msg.append(OPCAO_MENU_CONSULTAR_VACINA + " - Consultar Vacina\n");
+		msg.append(OPCAO_MENU_CONSULTAR_TODAS_VACINAS + " - Consultar todas as Vacinas\n");
 		msg.append(OPCAO_MENU_EXCLUIR_VACINA + " - Excluir Vacina\n");
 		msg.append(OPCAO_MENU_VACINA_VOLTAR + " - Voltar\n");
 		msg.append("\nDigite a opção: ");
@@ -113,11 +115,6 @@ public class MenuVacina {
 		LocalDate dataInformadoPeloUsuario = LocalDate.parse(JOptionPane.showInputDialog(null, "Digite a Data de Inicio da Pesquisa"));
 		vacinaVO.setDataInicioPesquisa(dataInformadoPeloUsuario);
 		
-		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
-		pesquisadorInformadoPeloUsuario.setIdPessoa(2);
-//		String pesquisadorInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Nome");
-		vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario);
-		
 		int dosesInformadoPeloUsuario = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a quantidade de doses"));
 		vacinaVO.setQuantidadeDoses(dosesInformadoPeloUsuario);
 		
@@ -146,14 +143,33 @@ public class MenuVacina {
 			}
 		}
 		
-		ControladoraVacina controladoraVacina = new ControladoraVacina();
-		String resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
+		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
+		
+		int idPesquisador = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite o id do responsavel pela vacina"));
+		
+		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
+		pesquisadorInformadoPeloUsuario = controladoraPessoa.consultarPessoaController(idPesquisador);
+		
+		String resultado = "";
+		
+		if (pesquisadorInformadoPeloUsuario.getIdPessoa() >= 0) {
+			vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario);
+			
+			ControladoraVacina controladoraVacina = new ControladoraVacina();
+			resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
+		} else {
+			resultado = "Pesquisador inexistente";
+		}
 		JOptionPane.showMessageDialog(null, resultado);
 	}
 
 	private void consultarTodasVacina() {
 		
-		
+//		ControladoraVacina controladoraVacina = new ControladoraVacina();
+//		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
+//		todasVacinas = controladoraVacina.consultarVacinaController();
+//		
+//		JOptionPane.showMessageDialog(null, todasVacinas);
 	}
 
 	private void excluirVacina() {

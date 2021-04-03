@@ -1,5 +1,7 @@
 package model.BO;
 
+import java.util.List;
+
 import model.entity.VacinaVO;
 import model.repository.VacinaDAO;
 
@@ -53,5 +55,10 @@ public class VacinaBO {
 			}
 		}
 		return retorno;
+	}
+
+	public List<VacinaVO> consultarTodasVacinas() {
+		VacinaDAO vacinaDAO = new VacinaDAO();
+		return vacinaDAO.consultarTodasVacinas(false);
 	}
 }
