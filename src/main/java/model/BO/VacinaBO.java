@@ -59,6 +59,6 @@ public class VacinaBO {
 
 	public List<VacinaVO> consultarTodasVacinas() {
 		VacinaDAO vacinaDAO = new VacinaDAO();
-		return vacinaDAO.consultarTodasVacinas(false);
+		return vacinaDAO.consultarTodasVacinas(true);
 	}
 }

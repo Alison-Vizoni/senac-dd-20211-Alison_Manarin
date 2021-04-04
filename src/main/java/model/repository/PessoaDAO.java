@@ -120,7 +120,7 @@ public class PessoaDAO {
 	 */
 	public PessoaVO consutarPessoaPorId(Integer idPessoa, boolean comVacina) {
 		
-		PessoaVO pessoaConsultada = null;
+		PessoaVO pessoaConsultada = new PessoaVO();
 		
 		String sql = "SELECT * FROM PESSOA WHERE IDPESSOA = ?";
 		

@@ -165,11 +165,15 @@ public class MenuVacina {
 
 	private void consultarTodasVacina() {
 		
-//		ControladoraVacina controladoraVacina = new ControladoraVacina();
-//		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
-//		todasVacinas = controladoraVacina.consultarVacinaController();
-//		
-//		JOptionPane.showMessageDialog(null, todasVacinas);
+		ControladoraVacina controladoraVacina = new ControladoraVacina();
+		List<VacinaVO> todasVacinas = controladoraVacina.consultarVacinaController();
+		String listaVacina = "";
+		
+		for (VacinaVO vacinaVO : todasVacinas) {
+			listaVacina += vacinaVO + "\n";
+		}
+		
+		JOptionPane.showMessageDialog(null, listaVacina, "Vacinas", JOptionPane.INFORMATION_MESSAGE, null);
 	}
 
 	private void excluirVacina() {
