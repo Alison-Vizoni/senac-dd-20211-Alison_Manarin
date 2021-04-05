@@ -19,17 +19,18 @@ public class PessoaVO {
 	private TipoPessoa tipoPessoa;
 	private List<AplicacaoVacinaVO> vacinacoes;
 	
-	public PessoaVO(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,
+	public PessoaVO(int idPessoa, String nome, LocalDate dataNascimento, char sexo, String cpf, TipoPessoa tipoPessoa,
 			List<AplicacaoVacinaVO> vacinacoes) {
 		super();
+		this.idPessoa = idPessoa;
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
 		this.sexo = sexo;
 		this.cpf = cpf;
-		this.tipo = tipo;
+		this.tipoPessoa = tipoPessoa;
 		this.vacinacoes = vacinacoes;
 	}
-	
+
 	public PessoaVO() {
 		super();
 	}
@@ -46,7 +47,7 @@ public class PessoaVO {
 		}
 
 		return "ID PESSOA " + this.getIdPessoa() + "\nNome = " + this.getNome() + "\ndata Nascimento = " + this.getDataNascimento() + "\nsexo = "
-				+ this.getSexo() + "\ncpf = " + this.getcpf() + "\ntipo = " + this.getTipo() + "\nvacinacoes = " + textoVacina;
+				+ this.getSexo() + "\ncpf = " + this.getcpf() + "\ntipo = " + this.getTipoPessoa() + "\nvacinacoes = " + textoVacina;
 	}
 
 	public int getIdPessoa() {
@@ -89,12 +90,20 @@ public class PessoaVO {
 		this.cpf = cpf;
 	}
 
-	public int getTipo() {
-		return tipo;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public TipoPessoa getTipoPessoa() {
+		return tipoPessoa;
+	}
+
+	public void setTipoPessoa(TipoPessoa tipoPessoa) {
+		this.tipoPessoa = tipoPessoa;
 	}
 
 	public List<AplicacaoVacinaVO> getVacinacoes() {

@@ -9,9 +9,7 @@ import java.util.List;
 
 import model.Enum.EstagioPesquisa;
 import model.Enum.FaseVacina;
-import model.entity.PessoaVO;
 import model.entity.VacinaVO;
-import model.repository.PessoaDAO;
 
 public class VacinaDAO {
 	
@@ -121,7 +119,7 @@ public class VacinaDAO {
 	 * 
 	 * @return A vacina buscada.
 	 */
-	public VacinaVO consultarVacinaPorId(Integer idVacina, boolean idPEsquisadorComVacina) {
+	public VacinaVO consultarVacinaPorId(Integer idVacina) {
 		
 		VacinaVO vacinaConsultada = null;
 		
@@ -134,7 +132,7 @@ public class VacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				vacinaConsultada = this.converterDoResultSet(resultadoConsulta, idPEsquisadorComVacina);
+				vacinaConsultada = this.converterDoResultSet(resultadoConsulta);
 				}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar vacina por IDVACINA: \n " + e.getMessage());
@@ -148,7 +146,7 @@ public class VacinaDAO {
 	 * 
 	 * @return Retorna todas as vacinas cadastradas na Database.
 	 */
-	public List<VacinaVO> consultarTodasVacinas(boolean idPEsquisadorComVacina) {
+	public List<VacinaVO> consultarTodasVacinas() {
 		
 		List<VacinaVO> todasVacinas = new ArrayList<VacinaVO>();
 		
@@ -161,7 +159,7 @@ public class VacinaDAO {
 			
 			while (resultadoConsulta.next()) {
 				
-				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta, idPEsquisadorComVacina);
+				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta);
 				
 				todasVacinas.add(vacina);
 				}
@@ -172,20 +170,14 @@ public class VacinaDAO {
 		return todasVacinas;
 	}
 
-	private VacinaVO converterDoResultSet(ResultSet resultadoConsulta, boolean idPEsquisadorComVacina) throws SQLException {
+	private VacinaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
 		VacinaVO vacinaConsultada = new VacinaVO();
 		vacinaConsultada.setIdVacina(resultadoConsulta.getInt("idVacina"));
 		vacinaConsultada.setNome(resultadoConsulta.getString("nome"));
 		vacinaConsultada.setPaisDeOrigem(resultadoConsulta.getString("PAIS_ORIGEM"));
 		vacinaConsultada.setEstagioPesquisa(EstagioPesquisa.getEstagioPesquisa(resultadoConsulta.getString("ESTAGIO_PESQUISA")));
 		vacinaConsultada.setDataInicioPesquisa(resultadoConsulta.getDate("DATA_INICIO_PESQUISA").toLocalDate());
-		
-		if (idPEsquisadorComVacina) {
-			PessoaDAO pDAO = new PessoaDAO();
-			PessoaVO responsavel = pDAO.consutarPessoaPorId(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"), false);
-			vacinaConsultada.setPesquisadorResponsavel(responsavel);
-		}
-		
+		vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
 		vacinaConsultada.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("fase")));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
 		
@@ -211,7 +203,7 @@ public class VacinaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 
 			if (resultadoConsulta.next()) {
-				vacinaVO = this.converterDoResultSet(resultadoConsulta, true);
+				vacinaVO = this.converterDoResultSet(resultadoConsulta);
 				}
 			
 		} catch (SQLException e) {

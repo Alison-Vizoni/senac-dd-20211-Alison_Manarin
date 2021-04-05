@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Enum.TipoPessoa;
 import model.entity.AplicacaoVacinaVO;
 import model.entity.PessoaVO;
 import model.repository.AplicacaoVacinaDAO;
@@ -36,7 +37,7 @@ public class PessoaDAO {
 			stmt.setDate(2, java.sql.Date.valueOf( novaPessoa.getDataNascimento()));
 			stmt.setString(3, String.valueOf(novaPessoa.getSexo()));
 			stmt.setString(4, novaPessoa.getcpf());
-			stmt.setInt(5, novaPessoa.getTipo());
+			stmt.setString(5, novaPessoa.getTipoPessoa().toString());
 			
 			stmt.executeUpdate();
 			
@@ -71,7 +72,7 @@ public class PessoaDAO {
 			stmt.setDate(2, java.sql.Date.valueOf(atualizarPessoa.getDataNascimento()));
 			stmt.setString(3, String.valueOf(atualizarPessoa.getSexo()));
 			stmt.setString(4, atualizarPessoa.getcpf());
-			stmt.setInt(5, atualizarPessoa.getTipo());
+			stmt.setString(5, atualizarPessoa.getTipoPessoa().toString());
 			stmt.setInt(6, atualizarPessoa.getIdPessoa());
 			
 			int quantidadeLinhasAfetadas = stmt.executeUpdate();
@@ -118,7 +119,7 @@ public class PessoaDAO {
 	 * 
 	 * @return A pessoa buscada na Database
 	 */
-	public PessoaVO consutarPessoaPorId(Integer idPessoa, boolean comVacina) {
+	public PessoaVO consultarPessoaPorId(Integer idPessoa) {
 		
 		PessoaVO pessoaConsultada = new PessoaVO();
 		
@@ -131,7 +132,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			if (resultadoConsulta.next()) {
-				pessoaConsultada = this.converterDoResultSet(resultadoConsulta, comVacina);
+				pessoaConsultada = this.converterDoResultSet(resultadoConsulta);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar pessoa por idPessoa: \n" + e.getMessage());
@@ -145,7 +146,7 @@ public class PessoaDAO {
 	 * 
 	 * @return Todos os clientes registrados na Database
 	 */
-	public List<PessoaVO> consutarTodasPessoas(boolean comVacina) {
+	public List<PessoaVO> consultarTodasPessoas() {
 		
 		List<PessoaVO> todasPessoas = new ArrayList<PessoaVO>();
 		
@@ -157,7 +158,7 @@ public class PessoaDAO {
 			ResultSet resultadoConsulta = stmt.executeQuery();
 			
 			while (resultadoConsulta.next()) {
-				PessoaVO pessoa = this.converterDoResultSet(resultadoConsulta, comVacina);
+				PessoaVO pessoa = this.converterDoResultSet(resultadoConsulta);
 
 				todasPessoas.add(pessoa);
 			}
@@ -168,21 +169,40 @@ public class PessoaDAO {
 		return todasPessoas;
 	}
 	
-	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta, boolean comVacina) throws SQLException {
+	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
 		PessoaVO pessoaConsultada = new PessoaVO();
 		pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
 		pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
 		pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO").toLocalDate());
 		pessoaConsultada.setSexo(resultadoConsulta.getString("sexo").charAt(0));
 		pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));
-		pessoaConsultada.setTipo(resultadoConsulta.getInt("tipo"));
+		pessoaConsultada.setTipoPessoa(TipoPessoa.getTipoPessoa(resultadoConsulta.getString("tipo")));
 		
-		if (comVacina) {
-			AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
-			List<AplicacaoVacinaVO> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
-			pessoaConsultada.setVacinacoes(aplicacoes);
-		}
+		AplicacaoVacinaDAO aplicacaoDAO = new AplicacaoVacinaDAO();
+		List<AplicacaoVacinaVO> aplicacoes = aplicacaoDAO.consultarAplicacaoVacinaPorIdPessoa(pessoaConsultada.getIdPessoa());
+		pessoaConsultada.setVacinacoes(aplicacoes);
 		
 		return pessoaConsultada;
+	}
+
+	public PessoaVO consultarPessoaPorNomeAndCpf(PessoaVO pesquisadorInformadoPeloUsuario) {
+		
+		String sql = " SELECT * FROM PESSOA WHERE NOME = ? AND CPF = ? ";
+		
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+			stmt.setString(1, pesquisadorInformadoPeloUsuario.getNome());
+			stmt.setString(2, pesquisadorInformadoPeloUsuario.getcpf());
+			
+			ResultSet resultadoConsulta = stmt.executeQuery();
+			
+			if (resultadoConsulta.next()) {
+				pesquisadorInformadoPeloUsuario = this.converterDoResultSet(resultadoConsulta);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar pessoa por idPessoa: \n" + e.getMessage());
+		}
+		
+		return pesquisadorInformadoPeloUsuario;
 	}
 }

@@ -1,7 +1,7 @@
 package view;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -9,12 +9,10 @@ import javax.swing.JOptionPane;
 import Controller.ControladoraPessoa;
 import Controller.ControladoraVacina;
 import Util.StringUtil;
-import jdk.nashorn.internal.scripts.JO;
 import model.Enum.EstagioPesquisa;
 import model.Enum.FaseVacina;
 import model.entity.PessoaVO;
 import model.entity.VacinaVO;
-import model.repository.PessoaDAO;
 
 public class MenuVacina { 
 	
@@ -33,6 +31,8 @@ public class MenuVacina {
 	private static final int OPCAO_ESTAGIO_APLICACAO_MASSIVA = 3;
 	private static final int OPCAO_ESTAGIO_FIM = 99;
 
+	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	
 	public void apresentarMenuVacina() {
 		int opcao = this.apresentarOpcoesMenu();
 		while(opcao != OPCAO_MENU_VACINA_VOLTAR) {
@@ -80,8 +80,6 @@ public class MenuVacina {
 	
 	private void cadastrarVacina() {
 		VacinaVO vacinaVO = new VacinaVO();
-		PessoaVO pessoaVO = new PessoaVO();
-		ControladoraPessoa controladoraPessa = new ControladoraPessoa();
 		
 		String nomeInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Nome");
 		vacinaVO.setNome(nomeInformadoPeloUsuario);
@@ -114,7 +112,7 @@ public class MenuVacina {
 			}
 		}
 		
-		LocalDate dataInformadoPeloUsuario = LocalDate.parse(JOptionPane.showInputDialog(null, "Digite a Data de Inicio da Pesquisa"));
+		LocalDate dataInformadoPeloUsuario = LocalDate.parse(JOptionPane.showInputDialog(null, "Digite a Data de Inicio da Pesquisa"), dataFormatter);
 		vacinaVO.setDataInicioPesquisa(dataInformadoPeloUsuario);
 		
 		int dosesInformadoPeloUsuario = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a quantidade de doses"));
@@ -147,20 +145,34 @@ public class MenuVacina {
 		
 		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
 		
-		int idPesquisador = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite o id do responsavel pela vacina"));
+		String nomePesquisador = JOptionPane.showInputDialog(null, "Digite o nome do responsavel pela vacina");
+		pesquisadorInformadoPeloUsuario.setNome(nomePesquisador);
+		
+		String cpfPesquisador = JOptionPane.showInputDialog(null, "Digite o CPF do responsavel pela vacina");
+		pesquisadorInformadoPeloUsuario.setcpf(cpfPesquisador);
 		
 		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
-		pesquisadorInformadoPeloUsuario = controladoraPessoa.consultarPessoaController(idPesquisador);
+		pesquisadorInformadoPeloUsuario = controladoraPessoa.consultarPessoaController(pesquisadorInformadoPeloUsuario);
 		
 		String resultado = "";
 		
-		if (pesquisadorInformadoPeloUsuario.getIdPessoa() >= 0) {
-			vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario);
+		if (pesquisadorInformadoPeloUsuario.getIdPessoa() > 0) {
+			vacinaVO.setPesquisadorResponsavel(pesquisadorInformadoPeloUsuario.getIdPessoa());
 			
 			ControladoraVacina controladoraVacina = new ControladoraVacina();
 			resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
 		} else {
-			resultado = "Pesquisador inexistente";
+			JOptionPane.showMessageDialog(null, "Pesquisador ainda não cadastrado! Favor cadastrar!", "MENU VACINA",
+					JOptionPane.WARNING_MESSAGE);
+			MenuPessoa menuPessoa = new MenuPessoa();
+			int idPesquisador = menuPessoa.cadastrarPessoa();
+			
+			JOptionPane.showMessageDialog(null, "código ID do pesquisador: " + idPesquisador, "MENU VACINA",
+					JOptionPane.INFORMATION_MESSAGE);
+			vacinaVO.setPesquisadorResponsavel(idPesquisador);
+			
+			ControladoraVacina controladoraVacina = new ControladoraVacina();
+			resultado = controladoraVacina.cadastrarVacinaController(vacinaVO);
 		}
 		JOptionPane.showMessageDialog(null, resultado);
 	}
@@ -189,6 +201,7 @@ public class MenuVacina {
 		
 		ControladoraVacina controladoraVacina = new ControladoraVacina();
 		String resultado = controladoraVacina.excluirVacinaController(vacinaVO);
+		
 		JOptionPane.showMessageDialog(null, resultado);
 	}
 	
