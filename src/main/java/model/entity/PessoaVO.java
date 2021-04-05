@@ -3,6 +3,8 @@ package model.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import model.Enum.TipoPessoa;
+
 /**
  * 
  * @author Alison
@@ -14,7 +16,7 @@ public class PessoaVO {
 	private LocalDate dataNascimento;
 	private char sexo;
 	private String cpf;
-	private int tipo;
+	private TipoPessoa tipoPessoa;
 	private List<AplicacaoVacinaVO> vacinacoes;
 	
 	public PessoaVO(String nome, LocalDate dataNascimento, char sexo, String cpf, int tipo,

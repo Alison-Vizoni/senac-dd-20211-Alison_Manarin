@@ -80,6 +80,8 @@ public class MenuVacina {
 	
 	private void cadastrarVacina() {
 		VacinaVO vacinaVO = new VacinaVO();
+		PessoaVO pessoaVO = new PessoaVO();
+		ControladoraPessoa controladoraPessa = new ControladoraPessoa();
 		
 		String nomeInformadoPeloUsuario = JOptionPane.showInputDialog(null, "Digite o Nome");
 		vacinaVO.setNome(nomeInformadoPeloUsuario);

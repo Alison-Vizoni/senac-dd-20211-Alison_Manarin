@@ -33,7 +33,7 @@ public class VacinaDAO {
 			stmt.setString(2, novaVacina.getPaisDeOrigem());
 			stmt.setString(3, novaVacina.getEstagioPesquisa().toString());
 			stmt.setDate(4, java.sql.Date.valueOf(novaVacina.getDataInicioPesquisa()));
-			stmt.setObject(5, novaVacina.getPesquisadorResponsavel().getIdPessoa());
+			stmt.setObject(5, novaVacina.getPesquisadorResponsavel());
 			stmt.setString(6, novaVacina.getFase().toString());
 			stmt.setInt(7, novaVacina.getQuantidadeDoses());
 			
@@ -72,7 +72,7 @@ public class VacinaDAO {
 			stmt.setString(2, atualizarVacina.getPaisDeOrigem());
 			stmt.setString(3, atualizarVacina.getEstagioPesquisa().toString());
 			stmt.setDate(4, java.sql.Date.valueOf(atualizarVacina.getDataInicioPesquisa()));
-			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel().getIdPessoa());
+			stmt.setObject(5, atualizarVacina.getPesquisadorResponsavel());
 			stmt.setString(6, atualizarVacina.getFase().toString());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
 			stmt.setInt(8, atualizarVacina.getIdVacina());
