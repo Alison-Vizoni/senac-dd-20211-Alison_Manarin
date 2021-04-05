@@ -34,13 +34,19 @@ public class VacinaVO {
 	public VacinaVO() {
 		super();
 	}
-
+	
 	@Override
 	public String toString() {
+		String ativo = "Desativada";
+		
+		if (this.isVacinaAtiva()) {
+			ativo = "Ativada";
+		}
+		
 		return " idVacina = " + this.idVacina + "\nnome = " + this.nome + "\npais De Origem = " + this.paisDeOrigem
 				+ "\nestagio Pesquisa = " + this.estagioPesquisa + "\ndata Inicio Pesquisa = " + this.dataInicioPesquisa
 				+ "\npesquisador Responsavel = " + this.pesquisadorResponsavel + "\nfase = " + this.fase + "\nquantidade Doses = "
-				+ this.quantidadeDoses + "\nvacina ativa = " + this.vacinaAtiva;
+				+ this.quantidadeDoses + "\nvacina ativa = " + ativo;
 	}
 
 	public Integer getIdVacina() {

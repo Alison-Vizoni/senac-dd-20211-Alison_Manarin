@@ -143,6 +143,16 @@ public class MenuVacina {
 			}
 		}
 		
+		int ativo = JOptionPane.showConfirmDialog(null, "A vacina pode ser considerada ativa?", "Sim ou Não", JOptionPane.YES_NO_OPTION);
+		boolean flag;
+		if (ativo == JOptionPane.YES_OPTION) {
+			flag = true;
+		} else {
+			flag = false;
+		}
+		
+		vacinaVO.setVacinaAtiva(flag);
+		
 		PessoaVO pesquisadorInformadoPeloUsuario = new PessoaVO();
 		
 		String nomePesquisador = JOptionPane.showInputDialog(null, "Digite o nome do responsavel pela vacina");
@@ -185,6 +195,12 @@ public class MenuVacina {
 		
 		for (VacinaVO vacinaVO : todasVacinas) {
 			listaVacina += vacinaVO + "\n";
+			
+			if (vacinaVO.isVacinaAtiva()) {
+				listaVacina += "\n";
+			} else {
+				listaVacina += "\n";
+			}
 		}
 		
 		JOptionPane.showMessageDialog(null, listaVacina, "Vacinas", JOptionPane.INFORMATION_MESSAGE, null);

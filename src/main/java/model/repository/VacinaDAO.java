@@ -22,8 +22,8 @@ public class VacinaDAO {
 	 */
 	public VacinaVO cadastrarVacina(VacinaVO novaVacina) {
 		String sql = " INSERT INTO VACINA ( NOME, PAIS_ORIGEM, ESTAGIO_PESQUISA, DATA_INICIO_PESQUISA,"
-				+ " ID_PESQUISADOR_RESPONSAVEL, FASE, QUANTIDADE_DOSES )"
-				+ " VALUES ( ?, ?, ?, ?, ?, ?, ? )";
+				+ " ID_PESQUISADOR_RESPONSAVEL, FASE, QUANTIDADE_DOSES, ATIVA )"
+				+ " VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )";
 		
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
@@ -34,6 +34,7 @@ public class VacinaDAO {
 			stmt.setObject(5, novaVacina.getPesquisadorResponsavel());
 			stmt.setString(6, novaVacina.getFase().toString());
 			stmt.setInt(7, novaVacina.getQuantidadeDoses());
+			stmt.setBoolean(8, novaVacina.isVacinaAtiva());
 			
 			stmt.executeUpdate();
 			
@@ -61,7 +62,7 @@ public class VacinaDAO {
 		boolean atualizou = false;
 		
 		String sql = " UPDATE VACINA SET NOME = ?, PAIS_ORIGEM = ?, ESTAGIO_PESQUISA = ?, DATA_INICIO_PESQUISA = ?,"
-				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?"
+				+ " ID_PESQUISADOR_RESPONSAVEL = ?, FASE = ?, QUANTIDADE_DOSES = ?, ATIVA = ?"
 				+ " WHERE IDVACINA = ?";
 		
 		try (Connection conn = Banco.getConnection();
@@ -74,6 +75,7 @@ public class VacinaDAO {
 			stmt.setString(6, atualizarVacina.getFase().toString());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
 			stmt.setInt(8, atualizarVacina.getIdVacina());
+			stmt.setBoolean(8, atualizarVacina.isVacinaAtiva());
 			
 			int quantidadeDeLinhasAfetadas = stmt.executeUpdate();
 			
@@ -180,6 +182,7 @@ public class VacinaDAO {
 		vacinaConsultada.setPesquisadorResponsavel(resultadoConsulta.getInt("ID_PESQUISADOR_RESPONSAVEL"));
 		vacinaConsultada.setFase(FaseVacina.getFaseVacina(resultadoConsulta.getString("fase")));
 		vacinaConsultada.setQuantidadeDoses(resultadoConsulta.getInt("QUANTIDADE_DOSES"));
+		vacinaConsultada.setVacinaAtiva(resultadoConsulta.getBoolean("ATIVA"));
 		
 		return vacinaConsultada;
 	}
