@@ -245,7 +245,15 @@ public class TelaCadastroVacina {
 		this.txtNomeVacina.setText(v.getNome());
 		this.txtPaisOrigem.setText(v.getPaisDeOrigem());
 		this.cbxEstagioPesquisa.setSelectedItem(v.getEstagioPesquisa());
-		txtDataInicioPesquisa.setText(v.getDataInicioPesquisa().getDayOfMonth() +"/"+ v.getDataInicioPesquisa().getMonthValue() +"/"+ v.getDataInicioPesquisa().getYear());
+		
+		String mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
+		
+		if(v.getDataInicioPesquisa().getMonthValue() < 10) {
+			mes = "0" + v.getDataInicioPesquisa().getMonthValue();
+		} else {
+			mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
+		}
+		txtDataInicioPesquisa.setText(v.getDataInicioPesquisa().getDayOfMonth() +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
 		this.cbxFaseVacina.setSelectedItem(v.getFase());
 		this.txtQuantidadeDoses.setText(String.valueOf(v.getQuantidadeDoses()));
 		this.cbxEstadoVacina.setSelectedItem(v.isVacinaAtiva());
