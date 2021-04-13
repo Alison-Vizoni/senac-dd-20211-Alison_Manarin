@@ -15,8 +15,8 @@ import model.entity.PessoaVO;
 import model.entity.VacinaVO;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
-import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +34,7 @@ public class TelaCadastroVacina {
 	private JComboBox cbxEstagioPesquisa;
 	private JComboBox cbxFaseVacina;
 	private JComboBox cbxEstadoVacina;
+	private VacinaVO vacinaVO;
 	
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -44,7 +45,7 @@ public class TelaCadastroVacina {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaCadastroVacina window = new TelaCadastroVacina();
+					TelaCadastroVacina window = new TelaCadastroVacina(null);
 					window.janela.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +57,8 @@ public class TelaCadastroVacina {
 	/**
 	 * Create the application.
 	 */
-	public TelaCadastroVacina() {
+	public TelaCadastroVacina(VacinaVO vacinaVO) {
+		this.vacinaVO = vacinaVO;
 		initialize();
 	}
 
@@ -88,7 +90,7 @@ public class TelaCadastroVacina {
 		txtCpfPesquisador.setBounds(241, 63, 317, 20);
 		janela.getContentPane().add(txtCpfPesquisador);
 		
-		Button btnBuscarPesquisador = new Button("Buscar pesquisador");
+		JButton btnBuscarPesquisador = new JButton("Buscar pesquisador");
 		btnBuscarPesquisador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idPesquisador = 0;
@@ -162,7 +164,7 @@ public class TelaCadastroVacina {
 		cbxEstadoVacina.setBounds(159, 348, 397, 20);
 		janela.getContentPane().add(cbxEstadoVacina);
 		
-		Button btnSalvarVacina = new Button("Salvar vacina");
+		JButton btnSalvarVacina = new JButton("Salvar vacina");
 		btnSalvarVacina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (txtNomePesquisador.getText().isEmpty() || txtCpfPesquisador.getText().isEmpty()) {
@@ -190,11 +192,69 @@ public class TelaCadastroVacina {
 		btnSalvarVacina.setBounds(433, 386, 125, 22);
 		janela.getContentPane().add(btnSalvarVacina);
 		
+		JButton btnAtualizarVacina = new JButton("Atualizar vacina");
+		btnAtualizarVacina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (txtNomePesquisador.getText().isEmpty() || txtCpfPesquisador.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "É necessario preencher o Nome e Cpf do pesquisador para verificar a sua existência no sistema", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
+				} else {
+					VerificarPessoa();
+				}
+				
+				boolean flag = true;
+				
+				while (flag) {
+					if (txtNomeVacina.getText().isEmpty() 
+							|| txtPaisOrigem.getText().isEmpty()
+							|| txtDataInicioPesquisa.getText().isEmpty()
+							|| txtQuantidadeDoses.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "É necessario preencher todos os campos para cadastrar a vacina", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
+						flag = true;
+					} else {
+						flag = false;
+						CadastrarVacina();
+					}
+				}
+			}
+		});
+		btnAtualizarVacina.setBounds(433, 386, 125, 22);
+		janela.getContentPane().add(btnAtualizarVacina);
+		
 		txtQuantidadeDoses = new JTextField();
 		txtQuantidadeDoses.setColumns(10);
 		txtQuantidadeDoses.setBounds(208, 315, 348, 20);
 		janela.getContentPane().add(txtQuantidadeDoses);
 		
+		if (vacinaVO != null) {
+			preencerVacinaNaTela(vacinaVO);
+			janela.setTitle("Edição de Endereço");
+			janela.getContentPane().add(btnAtualizarVacina);
+		} else {
+			janela.getContentPane().add(btnSalvarVacina);
+			janela.setTitle("Cadastro de Vacina");
+		}
+	}
+
+	private void preencerVacinaNaTela(VacinaVO v) {
+		
+		PessoaVO pesquisador = RetornarPesquisador(v.getPesquisadorResponsavel());
+		
+		this.txtNomePesquisador.setText(pesquisador.getNome());
+		this.txtCpfPesquisador.setText(pesquisador.getCpf());
+		
+		this.txtNomeVacina.setText(v.getNome());
+		this.txtPaisOrigem.setText(v.getPaisDeOrigem());
+		this.cbxEstagioPesquisa.setSelectedItem(v.getEstagioPesquisa());
+		txtDataInicioPesquisa.setText(v.getDataInicioPesquisa().getDayOfMonth() +"/"+ v.getDataInicioPesquisa().getMonthValue() +"/"+ v.getDataInicioPesquisa().getYear());
+		this.cbxFaseVacina.setSelectedItem(v.getFase());
+		this.txtQuantidadeDoses.setText(String.valueOf(v.getQuantidadeDoses()));
+		this.cbxEstadoVacina.setSelectedItem(v.isVacinaAtiva());
+	}
+
+	private PessoaVO RetornarPesquisador(int pesquisadorResponsavel) {
+		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
+		PessoaVO pesquisador = controladoraPessoa.consultarPessoaPorId(pesquisadorResponsavel);
+		return pesquisador;
 	}
 
 	protected int VerificarPessoa() {
@@ -207,11 +267,10 @@ public class TelaCadastroVacina {
 		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
 		pesquisador = controladoraPessoa.consultarPessoaController(pesquisador);
 		
-		String resultado = "";
+		String resultado = "Pesquisador Válido";
 		
 		if (pesquisador.getIdPessoa() > 0) {
 			novaVacina.setPesquisadorResponsavel(pesquisador.getIdPessoa());
-			resultado = "Código ID do pesquisador: " + pesquisador.getIdPessoa();
 		} else {
 			JOptionPane.showMessageDialog(null, "Pesquisador ainda não cadastrado! Favor cadastrar!", "MENU VACINA",
 					JOptionPane.WARNING_MESSAGE);
@@ -265,7 +324,27 @@ public class TelaCadastroVacina {
 		novaVacina.setPesquisadorResponsavel(idPesquisador);
 		
 		ControladoraVacina controladoraVacina = new ControladoraVacina();
-		String resultado = controladoraVacina.cadastrarVacinaController(novaVacina);
+		String resultado ="";
+		
+		if (vacinaVO == null) {
+			resultado = controladoraVacina.cadastrarVacinaController(novaVacina);
+		} else {
+			novaVacina.setIdVacina(vacinaVO.getIdVacina());
+			resultado = controladoraVacina.atualizarVacina(novaVacina);
+		}
+		
 		JOptionPane.showMessageDialog(null, resultado);
+	}
+
+	public JFrame getJanela() {
+		return janela;
+	}
+	
+	public VacinaVO getVacinaVO() {
+		return vacinaVO;
+	}
+	
+	public void setVacinaVO(VacinaVO vacinaVO) {
+		this.vacinaVO = vacinaVO;
 	}
 }

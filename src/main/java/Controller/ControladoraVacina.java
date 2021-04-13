@@ -11,6 +11,11 @@ public class ControladoraVacina {
 		VacinaBO vacinaBO = new VacinaBO();
 		return vacinaBO.cadastrarVacinaBO(vacinaVO);
 	}
+	
+	public String atualizarVacina(VacinaVO AtualizarVacina) {
+		VacinaBO vacinaBO = new VacinaBO();
+		return vacinaBO.atualizarVacina(AtualizarVacina);
+	}
 
 	public String excluirVacinaController(VacinaVO vacinaVO) {
 		VacinaBO vacinaBO = new VacinaBO();
@@ -21,5 +26,4 @@ public class ControladoraVacina {
 		VacinaBO vacinaBO = new VacinaBO();
 		return vacinaBO.consultarTodasVacinas();
 	}
-
 }
