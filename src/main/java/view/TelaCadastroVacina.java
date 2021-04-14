@@ -190,7 +190,6 @@ public class TelaCadastroVacina {
 			}
 		});
 		btnSalvarVacina.setBounds(433, 386, 125, 22);
-		janela.getContentPane().add(btnSalvarVacina);
 		
 		JButton btnAtualizarVacina = new JButton("Atualizar vacina");
 		btnAtualizarVacina.addActionListener(new ActionListener() {
@@ -218,7 +217,6 @@ public class TelaCadastroVacina {
 			}
 		});
 		btnAtualizarVacina.setBounds(433, 386, 125, 22);
-		janela.getContentPane().add(btnAtualizarVacina);
 		
 		txtQuantidadeDoses = new JTextField();
 		txtQuantidadeDoses.setColumns(10);
@@ -226,9 +224,9 @@ public class TelaCadastroVacina {
 		janela.getContentPane().add(txtQuantidadeDoses);
 		
 		if (vacinaVO != null) {
-			preencerVacinaNaTela(vacinaVO);
 			janela.setTitle("Edição de Endereço");
 			janela.getContentPane().add(btnAtualizarVacina);
+			preencerVacinaNaTela(vacinaVO);
 		} else {
 			janela.getContentPane().add(btnSalvarVacina);
 			janela.setTitle("Cadastro de Vacina");
@@ -246,14 +244,22 @@ public class TelaCadastroVacina {
 		this.txtPaisOrigem.setText(v.getPaisDeOrigem());
 		this.cbxEstagioPesquisa.setSelectedItem(v.getEstagioPesquisa());
 		
+		String dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
 		String mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
+		
+		if (v.getDataInicioPesquisa().getDayOfMonth() < 10) {
+			dia = "0" + v.getDataInicioPesquisa().getDayOfMonth();
+		} else {
+			dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
+		}
 		
 		if(v.getDataInicioPesquisa().getMonthValue() < 10) {
 			mes = "0" + v.getDataInicioPesquisa().getMonthValue();
 		} else {
 			mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
 		}
-		txtDataInicioPesquisa.setText(v.getDataInicioPesquisa().getDayOfMonth() +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
+		
+		txtDataInicioPesquisa.setText(dia +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
 		this.cbxFaseVacina.setSelectedItem(v.getFase());
 		this.txtQuantidadeDoses.setText(String.valueOf(v.getQuantidadeDoses()));
 		this.cbxEstadoVacina.setSelectedItem(v.isVacinaAtiva());
@@ -299,6 +305,8 @@ public class TelaCadastroVacina {
 	protected void CadastrarVacina() {
 		VacinaVO novaVacina = new VacinaVO();
 		
+		
+		
 		novaVacina.setNome(txtNomeVacina.getText());
 		novaVacina.setPaisDeOrigem(txtPaisOrigem.getText());
 		
@@ -334,7 +342,7 @@ public class TelaCadastroVacina {
 		ControladoraVacina controladoraVacina = new ControladoraVacina();
 		String resultado ="";
 		
-		if (vacinaVO == null) {
+		if (vacinaVO.getIdVacina() <= 0 || vacinaVO.getIdVacina() == null) {
 			resultado = controladoraVacina.cadastrarVacinaController(novaVacina);
 		} else {
 			novaVacina.setIdVacina(vacinaVO.getIdVacina());

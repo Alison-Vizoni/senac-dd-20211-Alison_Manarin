@@ -14,7 +14,7 @@ public class ControladoraVacina {
 	
 	public String atualizarVacina(VacinaVO AtualizarVacina) {
 		VacinaBO vacinaBO = new VacinaBO();
-		return vacinaBO.atualizarVacina(AtualizarVacina);
+		return vacinaBO.atualizarVacinaBO(AtualizarVacina);
 	}
 
 	public String excluirVacinaController(VacinaVO vacinaVO) {

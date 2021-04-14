@@ -57,7 +57,7 @@ public class VacinaDAO {
 	 * 
 	 * @return se o registro foi ou nao atualizado na tabela
 	 */
-	public boolean atualizarVacina(VacinaVO atualizarVacina) {
+	public boolean atualizarVacinaDAO(VacinaVO atualizarVacina) {
 		
 		boolean atualizou = false;
 		
@@ -75,7 +75,7 @@ public class VacinaDAO {
 			stmt.setString(6, atualizarVacina.getFase().toString());
 			stmt.setInt(7, atualizarVacina.getQuantidadeDoses());
 			stmt.setInt(8, atualizarVacina.getIdVacina());
-			stmt.setBoolean(8, atualizarVacina.isVacinaAtiva());
+			stmt.setBoolean(9, atualizarVacina.isVacinaAtiva());
 			
 			int quantidadeDeLinhasAfetadas = stmt.executeUpdate();
 			
