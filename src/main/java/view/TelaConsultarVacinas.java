@@ -29,7 +29,7 @@ public class TelaConsultarVacinas extends JFrame {
 	private JButton btnEditarVacina;
 	private List<VacinaVO> vacinas;
 	private ControladoraVacina controladoraVacina = new ControladoraVacina();
-	private String[] nomesColunas = {"Nome da vacina", "Pesquisador responsável", "pais de origem", "estagio da pesquisa", "fase", "Quatidade de doses"};
+	private String[] nomesColunas = {"Nome da vacina", "Pesquisador responsável", "pais de origem", "estagio da pesquisa", "fase", "Quatidade de doses", "Data de inicio"};
 
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
@@ -142,7 +142,7 @@ public class TelaConsultarVacinas extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) this.tblListaVacina.getModel();
 		
 		for(VacinaVO vac: this.vacinas) {
-			Object[] novaLinhaTabela = new Object[6];
+			Object[] novaLinhaTabela = new Object[7];
 			
 			novaLinhaTabela[0] = vac.getNome();
 			novaLinhaTabela[1] = vac.getPesquisadorResponsavel();
@@ -150,6 +150,7 @@ public class TelaConsultarVacinas extends JFrame {
 			novaLinhaTabela[3] = vac.getEstagioPesquisa();
 			novaLinhaTabela[4] = vac.getFase();
 			novaLinhaTabela[5] = vac.getQuantidadeDoses();
+			novaLinhaTabela[6] = vac.getDataInicioPesquisa();
 			
 			model.addRow(novaLinhaTabela);
 		}

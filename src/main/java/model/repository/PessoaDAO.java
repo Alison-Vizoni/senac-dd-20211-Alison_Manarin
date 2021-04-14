@@ -183,7 +183,7 @@ public class PessoaDAO {
 		pessoaConsultada.setVacinacoes(aplicacoes);
 		
 		return pessoaConsultada;
-	}
+	} 
 
 	public PessoaVO consultarPessoaPorNomeAndCpf(PessoaVO pesquisadorInformadoPeloUsuario) {
 		

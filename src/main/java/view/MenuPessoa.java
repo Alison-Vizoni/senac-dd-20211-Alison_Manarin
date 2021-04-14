@@ -65,7 +65,7 @@ public class MenuPessoa {
 		LocalDate dataNascimento = (LocalDate.parse(JOptionPane.showInputDialog(null,
 				"Digite a data de nascimento  da pessoa"), dataFormatter));
 		pessoaVO.setDataNascimento(dataNascimento);
-		
+		 
 		char sexo = JOptionPane.showInputDialog(null, "Digite o sexo  da pessoa").charAt(0);
 		pessoaVO.setSexo(sexo);
 
