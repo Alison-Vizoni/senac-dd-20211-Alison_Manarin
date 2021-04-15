@@ -15,7 +15,7 @@ public class VacinaBO {
 	 * @return vacina cadastrada OU vacina ja existente
 	 */
 	public String cadastrarVacinaBO(VacinaVO vacinaVO) {
-		String retorno = "Erro ao verificar validação de cadastro";
+		String retorno = "";
 		VacinaDAO vacinaDAO = new VacinaDAO();
 		
 		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO);
@@ -66,7 +66,7 @@ public class VacinaBO {
 		VacinaVO verificar = vacinaDAO.consultarVacinaPorNomeAndPais(vacinaVO);
 		
 		if (verificar.getIdVacina() != null) {
-			if (vacinaDAO.excluirVacina(verificar.getIdVacina())) {
+			if (vacinaDAO.desativarVacina(vacinaVO.getIdVacina())) {
 				retorno = "Vacina excluida com sucesso.";
 			} else {
 				retorno = "Não foi possivel excluir a vacina.";

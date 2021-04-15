@@ -142,17 +142,20 @@ public class TelaConsultarVacinas extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) this.tblListaVacina.getModel();
 		
 		for(VacinaVO vac: this.vacinas) {
-			Object[] novaLinhaTabela = new Object[7];
 			
-			novaLinhaTabela[0] = vac.getNome();
-			novaLinhaTabela[1] = vac.getPesquisadorResponsavel();
-			novaLinhaTabela[2] = vac.getPaisDeOrigem();
-			novaLinhaTabela[3] = vac.getEstagioPesquisa();
-			novaLinhaTabela[4] = vac.getFase();
-			novaLinhaTabela[5] = vac.getQuantidadeDoses();
-			novaLinhaTabela[6] = vac.getDataInicioPesquisa();
-			
-			model.addRow(novaLinhaTabela);
+			if(vac.isVacinaAtiva()) {
+				Object[] novaLinhaTabela = new Object[7];
+				
+				novaLinhaTabela[0] = vac.getNome();
+				novaLinhaTabela[1] = vac.getPesquisadorResponsavel();
+				novaLinhaTabela[2] = vac.getPaisDeOrigem();
+				novaLinhaTabela[3] = vac.getEstagioPesquisa();
+				novaLinhaTabela[4] = vac.getFase();
+				novaLinhaTabela[5] = vac.getQuantidadeDoses();
+				novaLinhaTabela[6] = vac.getDataInicioPesquisa();
+				
+				model.addRow(novaLinhaTabela);
+			}
 		}
 	}
 	

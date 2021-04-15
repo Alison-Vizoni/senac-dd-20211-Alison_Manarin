@@ -33,9 +33,9 @@ public class PessoaDAO {
 		
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
-			stmt.setString(1, novaPessoa.getNome());
+			stmt.setString(1, novaPessoa.getNome().toUpperCase());
 			stmt.setDate(2, java.sql.Date.valueOf( novaPessoa.getDataNascimento()));
-			stmt.setString(3, String.valueOf(novaPessoa.getSexo()));
+			stmt.setString(3, String.valueOf(novaPessoa.getSexo()).toUpperCase());
 			stmt.setString(4, novaPessoa.getcpf());
 			stmt.setString(5, novaPessoa.getTipoPessoa().toString());
 			
@@ -68,9 +68,9 @@ public class PessoaDAO {
 		
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
-			stmt.setString(1, atualizarPessoa.getNome());
+			stmt.setString(1, atualizarPessoa.getNome().toUpperCase());
 			stmt.setDate(2, java.sql.Date.valueOf(atualizarPessoa.getDataNascimento()));
-			stmt.setString(3, String.valueOf(atualizarPessoa.getSexo()));
+			stmt.setString(3, String.valueOf(atualizarPessoa.getSexo()).toUpperCase());
 			stmt.setString(4, atualizarPessoa.getcpf());
 			stmt.setString(5, atualizarPessoa.getTipoPessoa().toString());
 			stmt.setInt(6, atualizarPessoa.getIdPessoa());
@@ -172,7 +172,7 @@ public class PessoaDAO {
 	private PessoaVO converterDoResultSet(ResultSet resultadoConsulta) throws SQLException {
 		PessoaVO pessoaConsultada = new PessoaVO();
 		pessoaConsultada.setIdPessoa(resultadoConsulta.getInt("IdPessoa"));
-		pessoaConsultada.setNome(resultadoConsulta.getString("nome"));
+		pessoaConsultada.setNome(resultadoConsulta.getString("nome").toUpperCase());
 		pessoaConsultada.setDataNascimento(resultadoConsulta.getDate("DATA_NASCIMENTO").toLocalDate());
 		pessoaConsultada.setSexo(resultadoConsulta.getString("sexo").charAt(0));
 		pessoaConsultada.setcpf(resultadoConsulta.getString("cpf"));

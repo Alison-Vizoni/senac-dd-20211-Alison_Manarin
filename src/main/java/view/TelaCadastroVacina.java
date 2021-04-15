@@ -35,7 +35,6 @@ public class TelaCadastroVacina {
 	private JTextField txtNomeVacina;
 	private JTextField txtPaisOrigem;
 	private JTextField txtNomePesquisador;
-	private JTextField txtDataInicioPesquisa;
 	private JTextField txtQuantidadeDoses;
 	private JTextField txtCpfPesquisador;
 	private JComboBox cbxEstagioPesquisa;
@@ -45,7 +44,8 @@ public class TelaCadastroVacina {
 	
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private JButton btnBuscarPesquisador;
-	//private DatePickerSettings dataInicioPesquisa;
+	private DatePickerSettings dateSettings;
+	private DatePicker dataTeste;
 
 	/**
 	 * Launch the application.
@@ -152,11 +152,17 @@ public class TelaCadastroVacina {
 		txtPaisOrigem.setBounds(127, 176, 429, 20);
 		janela.getContentPane().add(txtPaisOrigem);
 		
+		dateSettings = new DatePickerSettings();
+		dateSettings.setAllowKeyboardEditing(false);
+		dataTeste = new DatePicker(dateSettings);
+		dataTeste.setBounds(219, 252, 337, 20);
+		janela.getContentPane().add(dataTeste);
+		
 		//Colocar Máscara
-		txtDataInicioPesquisa = new JTextField();
-		txtDataInicioPesquisa.setColumns(10);
-		txtDataInicioPesquisa.setBounds(219, 252, 337, 20);
-		janela.getContentPane().add(txtDataInicioPesquisa);
+//		txtDataInicioPesquisa = new JTextField();
+//		txtDataInicioPesquisa.setColumns(10);
+//		txtDataInicioPesquisa.setBounds(219, 252, 337, 20);
+//		janela.getContentPane().add(txtDataInicioPesquisa);
 
 		JLabel lblEstagioVacina = new JLabel("Estado da vacina");
 		lblEstagioVacina.setBounds(27, 351, 102, 14);
@@ -186,7 +192,7 @@ public class TelaCadastroVacina {
 				
 				if (txtNomeVacina.getText().isEmpty() 
 						|| txtPaisOrigem.getText().isEmpty()
-						|| txtDataInicioPesquisa.getText().isEmpty()
+						|| dataTeste.getDate() == null 
 						|| txtQuantidadeDoses.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "É necessario preencher todos os campos para cadastrar a vacina", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
 				} else {
@@ -205,7 +211,7 @@ public class TelaCadastroVacina {
 
 				if (txtNomeVacina.getText().isEmpty() 
 						|| txtPaisOrigem.getText().isEmpty()
-						|| txtDataInicioPesquisa.getText().isEmpty() 
+						|| dataTeste.getDate() == null 
 						|| txtQuantidadeDoses.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "É necessario preencher todos os campos para cadastrar a vacina", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
 				} else {
@@ -255,22 +261,24 @@ public class TelaCadastroVacina {
 			this.cbxEstagioPesquisa.setSelectedIndex(2);
 		}
 		
-		String dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
-		String mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
-
-		if (v.getDataInicioPesquisa().getDayOfMonth() < 10) {
-			dia = "0" + v.getDataInicioPesquisa().getDayOfMonth();
-		} else {
-			dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
-		}
-
-		if(v.getDataInicioPesquisa().getMonthValue() < 10) {
-			mes = "0" + v.getDataInicioPesquisa().getMonthValue();
-		} else {
-			mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
-		}
+//		String dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
+//		String mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
+//
+//		if (v.getDataInicioPesquisa().getDayOfMonth() < 10) {
+//			dia = "0" + v.getDataInicioPesquisa().getDayOfMonth();
+//		} else {
+//			dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
+//		}
+//
+//		if(v.getDataInicioPesquisa().getMonthValue() < 10) {
+//			mes = "0" + v.getDataInicioPesquisa().getMonthValue();
+//		} else {
+//			mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
+//		}
+//		
+//		this.txtDataInicioPesquisa.setText(dia +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
 		
-		this.txtDataInicioPesquisa.setText(dia +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
+		this.dataTeste.setDate(v.getDataInicioPesquisa());
 		
 		if (v.getFase().toString().equals("SOMENTE_PESQUISADOR")) {
 			this.cbxFaseVacina.setSelectedIndex(0);
@@ -303,21 +311,24 @@ public class TelaCadastroVacina {
 		
 		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
 		pesquisador = controladoraPessoa.consultarPessoaController(pesquisador);
-		
+		int opcao;
 		String resultado = "Pesquisador Válido"; 
 		
 		if (pesquisador.getIdPessoa() > 0) {
 			novaVacina.setPesquisadorResponsavel(pesquisador.getIdPessoa());
 		} else {
-			JOptionPane.showMessageDialog(null, "Pesquisador ainda não cadastrado! Favor cadastrar!", "MENU VACINA",
-					JOptionPane.WARNING_MESSAGE);
-			MenuPessoa menuPessoa = new MenuPessoa();
-			int idPesquisador = menuPessoa.cadastrarPessoa();
-			
-			JOptionPane.showMessageDialog(null, "Código ID do pesquisador: " + idPesquisador, "MENU VACINA",
-					JOptionPane.INFORMATION_MESSAGE);
-			
-			novaVacina.setPesquisadorResponsavel(idPesquisador);
+			opcao = JOptionPane.showConfirmDialog(null, "Pesquisador(a) ainda não cadastrado(a)!\nVoce Deseja cadastrar?", "MENU VACINA", JOptionPane.YES_NO_OPTION);
+			if(opcao == JOptionPane.YES_OPTION) {
+				MenuPessoa menuPessoa = new MenuPessoa();
+				int idPesquisador = menuPessoa.cadastrarPessoa();
+				
+				JOptionPane.showMessageDialog(null, "Código ID do pesquisador: " + idPesquisador, "MENU VACINA",
+						JOptionPane.INFORMATION_MESSAGE);
+				
+				novaVacina.setPesquisadorResponsavel(idPesquisador);
+			} else {
+				resultado = "Não se esqueça que é necessário obter o\nNome e Cpf de uma pesquisador existente\npara cadastrar uma Vacina";
+			}
 		}
 		JOptionPane.showMessageDialog(null, resultado);
 		
@@ -338,7 +349,8 @@ public class TelaCadastroVacina {
 			novaVacina.setEstagioPesquisa(EstagioPesquisa.APLICACAO_MASSIVA);
 		}
 		
-		novaVacina.setDataInicioPesquisa(LocalDate.parse(txtDataInicioPesquisa.getText(), dataFormatter));
+		// novaVacina.setDataInicioPesquisa(LocalDate.parse(txtDataInicioPesquisa.getText(), dataFormatter));
+		novaVacina.setDataInicioPesquisa(dataTeste.getDate());
 		
 		if (cbxFaseVacina.getSelectedItem().toString().equals("Somente pesquisador")) {
 			novaVacina.setFase(FaseVacina.SOMENTE_PESQUISADOR);
@@ -350,11 +362,7 @@ public class TelaCadastroVacina {
 		
 		novaVacina.setQuantidadeDoses(Integer.parseInt(txtQuantidadeDoses.getText()));
 		
-		if (cbxEstadoVacina.getSelectedItem().toString().equals("Ativada")) {
-			novaVacina.setVacinaAtiva(true);
-		} else {
-			novaVacina.setVacinaAtiva(false);
-		}
+		novaVacina.setVacinaAtiva(cbxEstadoVacina.getSelectedItem().toString().equals("Ativada"));
 		
 		int idPesquisador = VerificarPessoa();
 		novaVacina.setPesquisadorResponsavel(idPesquisador);

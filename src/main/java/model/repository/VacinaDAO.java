@@ -27,8 +27,8 @@ public class VacinaDAO {
 		
 		try (Connection conn = Banco.getConnection();
 				PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, sql);) {
-			stmt.setString(1, novaVacina.getNome());
-			stmt.setString(2, novaVacina.getPaisDeOrigem());
+			stmt.setString(1, novaVacina.getNome().toUpperCase());
+			stmt.setString(2, novaVacina.getPaisDeOrigem().toUpperCase());
 			stmt.setString(3, novaVacina.getEstagioPesquisa().toString());
 			stmt.setDate(4, java.sql.Date.valueOf(novaVacina.getDataInicioPesquisa()));
 			stmt.setObject(5, novaVacina.getPesquisadorResponsavel());
@@ -213,5 +213,26 @@ public class VacinaDAO {
 			System.out.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());
 		}
 		return vacinaVO;
+	}
+
+	public boolean desativarVacina(Integer idVacina) {
+		boolean desativarVacina = false;
+		
+		String sql = " UPDATE VACINA SET ATIVA = ?"
+				+ " WHERE IDVACINA = ?";
+		
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+			stmt.setBoolean(1, false);
+			stmt.setInt(2, idVacina);
+			
+			int quantidadeDeLinhasAfetadas = stmt.executeUpdate();
+			
+			desativarVacina = quantidadeDeLinhasAfetadas > 0;
+		} catch (SQLException e) {
+			System.out.println("Erro ao atualizar vacina: \n " + e.getMessage());
+		}
+
+		return desativarVacina;
 	}
 }
