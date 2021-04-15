@@ -196,7 +196,7 @@ public class TelaCadastroVacina {
 						|| txtQuantidadeDoses.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "É necessario preencher todos os campos para cadastrar a vacina", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
 				} else {
-					CadastrarVacina();
+					cadastrarVacina();
 				}
 			}
 		});
@@ -215,7 +215,7 @@ public class TelaCadastroVacina {
 						|| txtQuantidadeDoses.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "É necessario preencher todos os campos para cadastrar a vacina", "Cadastro de vacina", JOptionPane.WARNING_MESSAGE);
 				} else {
-					CadastrarVacina();
+					cadastrarVacina();
 				}
 			}
 		});
@@ -243,7 +243,7 @@ public class TelaCadastroVacina {
 
 	private void preencerVacinaNaTela(VacinaVO v) {
 		
-		PessoaVO pesquisador = RetornarPesquisador(v.getPesquisadorResponsavel());
+		PessoaVO pesquisador = retornarPesquisador(v.getPesquisadorResponsavel());
 		
 		this.txtNomePesquisador.setText(pesquisador.getNome());
 		this.txtCpfPesquisador.setText(pesquisador.getCpf());
@@ -260,23 +260,6 @@ public class TelaCadastroVacina {
 		} else if (v.getEstagioPesquisa().toString().equals("APLICACAO_MASSIVA")) {
 			this.cbxEstagioPesquisa.setSelectedIndex(2);
 		}
-		
-//		String dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
-//		String mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
-//
-//		if (v.getDataInicioPesquisa().getDayOfMonth() < 10) {
-//			dia = "0" + v.getDataInicioPesquisa().getDayOfMonth();
-//		} else {
-//			dia = String.valueOf(v.getDataInicioPesquisa().getDayOfMonth());
-//		}
-//
-//		if(v.getDataInicioPesquisa().getMonthValue() < 10) {
-//			mes = "0" + v.getDataInicioPesquisa().getMonthValue();
-//		} else {
-//			mes = String.valueOf(v.getDataInicioPesquisa().getMonthValue());
-//		}
-//		
-//		this.txtDataInicioPesquisa.setText(dia +"/"+ mes +"/"+ v.getDataInicioPesquisa().getYear());
 		
 		this.dataTeste.setDate(v.getDataInicioPesquisa());
 		
@@ -296,7 +279,7 @@ public class TelaCadastroVacina {
 		}
 	}
 
-	private PessoaVO RetornarPesquisador(int pesquisadorResponsavel) {
+	private PessoaVO retornarPesquisador(int pesquisadorResponsavel) {
 		ControladoraPessoa controladoraPessoa = new ControladoraPessoa();
 		PessoaVO pesquisador = controladoraPessoa.consultarPessoaPorId(pesquisadorResponsavel);
 		return pesquisador;
@@ -335,7 +318,7 @@ public class TelaCadastroVacina {
 		return pesquisador.getIdPessoa();
 	}
 
-	protected void CadastrarVacina() {
+	protected void cadastrarVacina() {
 		VacinaVO novaVacina = new VacinaVO();
 		
 		novaVacina.setNome(txtNomeVacina.getText());

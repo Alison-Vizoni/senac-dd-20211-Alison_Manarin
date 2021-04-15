@@ -34,13 +34,16 @@ public class MenuVacinacao {
 				case OPCAO_MENU_RELATORIO: {
 					MenuRelatorio menuRelatorio = new MenuRelatorio();
 					menuRelatorio.apresentarMenuRelatorio();
+					opcao = OPCAO_MENU_SAIR;
 					break;
 				}
 				default: {
 					System.out.println("\nOpção inválida!");
 				}
 			}
+			if(opcao != OPCAO_MENU_SAIR) {
 			opcao = this.apresentarOpcoesMenu();
+			}
 		}
 		
 	}
