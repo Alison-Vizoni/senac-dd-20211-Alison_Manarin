@@ -13,6 +13,9 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import Controller.ControladoraVacina;
 import model.entity.VacinaVO;
 import java.awt.event.ActionListener;
@@ -20,6 +23,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
+import javax.swing.SwingConstants;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class TelaConsultarVacinas extends JFrame {
 
@@ -32,6 +38,10 @@ public class TelaConsultarVacinas extends JFrame {
 	private String[] nomesColunas = {"Nome da vacina", "Pesquisador responsável", "pais de origem", "estagio da pesquisa", "fase", "Quatidade de doses", "Data de inicio"};
 
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private JTextField txtNomePesquisador;
+	private JTextField txtNomeVacina;
+	private DatePickerSettings dateSettings;
+	private DatePicker dataTeste;
 	
 	/**
 	 * Launch the application.
@@ -54,24 +64,24 @@ public class TelaConsultarVacinas extends JFrame {
 	 */
 	public TelaConsultarVacinas() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 999, 387);
+		setBounds(100, 100, 999, 488);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnConsultarTodasVacinas = new JButton("Consultar todas as vacinas");
-		btnConsultarTodasVacinas.addActionListener(new ActionListener() {
+		JButton btnConsultarVacinas = new JButton("Consultar vacinas");
+		btnConsultarVacinas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				atualizarTabelaVacina();
 			}
 		});
-		btnConsultarTodasVacinas.setBounds(328, 24, 243, 23);
-		contentPane.add(btnConsultarTodasVacinas);
+		btnConsultarVacinas.setBounds(328, 129, 243, 23);
+		contentPane.add(btnConsultarVacinas);
 		
 		btnExcluirVacina = new JButton("Excluir vacina");
 		btnExcluirVacina.setEnabled(false);
-		btnExcluirVacina.setBounds(113, 287, 205, 23);
+		btnExcluirVacina.setBounds(113, 392, 205, 23);
 		btnExcluirVacina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int indiceSelecionadoNaTablela = tblListaVacina.getSelectedRow();
@@ -100,7 +110,7 @@ public class TelaConsultarVacinas extends JFrame {
 			}
 		});
 		btnEditarVacina.setEnabled(false);
-		btnEditarVacina.setBounds(576, 287, 205, 23);
+		btnEditarVacina.setBounds(576, 392, 205, 23);
 		contentPane.add(btnEditarVacina);
 		
 		tblListaVacina = new JTable();
@@ -131,8 +141,36 @@ public class TelaConsultarVacinas extends JFrame {
 				}
 			}
 		});
-		tblListaVacina.setBounds(10, 58, 963, 218);
+		tblListaVacina.setBounds(10, 163, 963, 218);
 		contentPane.add(tblListaVacina);
+		
+		JLabel lblNewLabel = new JLabel("Nome do pesquisador");
+		lblNewLabel.setBounds(34, 11, 136, 14);
+		contentPane.add(lblNewLabel);
+		
+		txtNomePesquisador = new JTextField();
+		txtNomePesquisador.setBounds(34, 36, 243, 20);
+		contentPane.add(txtNomePesquisador);
+		txtNomePesquisador.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nome da vacina");
+		lblNewLabel_1.setBounds(328, 11, 136, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		txtNomeVacina = new JTextField();
+		txtNomeVacina.setBounds(328, 36, 243, 20);
+		contentPane.add(txtNomeVacina);
+		txtNomeVacina.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Data de in\u00EDcio da pesquisa");
+		lblNewLabel_2.setBounds(625, 11, 182, 14);
+		contentPane.add(lblNewLabel_2);
+		
+		dateSettings = new DatePickerSettings();
+		dateSettings.setAllowKeyboardEditing(false);
+		dataTeste = new DatePicker(dateSettings);
+		dataTeste.setBounds(625, 36, 243, 20);
+		contentPane.add(dataTeste);
 	}
 
 	protected void atualizarTabelaVacina() {
