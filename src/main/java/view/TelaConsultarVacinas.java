@@ -17,6 +17,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import Controller.ControladoraVacina;
+import model.Seletor.SeletorVacinaVO;
 import model.entity.VacinaVO;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -38,7 +39,7 @@ public class TelaConsultarVacinas extends JFrame {
 	private String[] nomesColunas = {"Nome da vacina", "Pesquisador responsável", "pais de origem", "estagio da pesquisa", "fase", "Quatidade de doses", "Data de inicio"};
 
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	private JTextField txtNomePesquisador;
+	private JTextField txtNomePais;
 	private JTextField txtNomeVacina;
 	private DatePickerSettings dateSettings;
 	private DatePicker dataTeste;
@@ -94,7 +95,8 @@ public class TelaConsultarVacinas extends JFrame {
 				if (opcaoSelecionada == JOptionPane.YES_OPTION) {
 					String mensagem = controladoraVacina.excluirVacinaController(vacinaSelecionada);
 					JOptionPane.showMessageDialog(null, mensagem);
-					atualizarTabelaVacina();
+					//atualizarTabelaVacina();
+					limparTabelaVacina();
 				}
 				
 			}
@@ -144,14 +146,14 @@ public class TelaConsultarVacinas extends JFrame {
 		tblListaVacina.setBounds(10, 163, 963, 218);
 		contentPane.add(tblListaVacina);
 		
-		JLabel lblNewLabel = new JLabel("Nome do pesquisador");
+		JLabel lblNewLabel = new JLabel("Nome do pais");
 		lblNewLabel.setBounds(34, 11, 136, 14);
 		contentPane.add(lblNewLabel);
 		
-		txtNomePesquisador = new JTextField();
-		txtNomePesquisador.setBounds(34, 36, 243, 20);
-		contentPane.add(txtNomePesquisador);
-		txtNomePesquisador.setColumns(10);
+		txtNomePais = new JTextField();
+		txtNomePais.setBounds(34, 36, 243, 20);
+		contentPane.add(txtNomePais);
+		txtNomePais.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Nome da vacina");
 		lblNewLabel_1.setBounds(328, 11, 136, 14);
@@ -174,7 +176,14 @@ public class TelaConsultarVacinas extends JFrame {
 	}
 
 	protected void atualizarTabelaVacina() {
-		vacinas = controladoraVacina.consultarVacinaController();
+		SeletorVacinaVO seletor = new SeletorVacinaVO();
+		
+		seletor.setNomePais(txtNomePais.getText());
+		seletor.setNomeVacina(txtNomeVacina.getText());
+		seletor.setDataInicioPesquisa(dataTeste.getDate());
+		
+		vacinas = controladoraVacina.consultarVacinaController(seletor);
+		
 		this.limparTabelaVacina();
 		
 		DefaultTableModel model = (DefaultTableModel) this.tblListaVacina.getModel();

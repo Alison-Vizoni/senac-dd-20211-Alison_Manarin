@@ -9,6 +9,7 @@ import java.util.List;
 
 import model.Enum.EstagioPesquisa;
 import model.Enum.FaseVacina;
+import model.Seletor.SeletorVacinaVO;
 import model.entity.VacinaVO;
 
 public class VacinaDAO {
@@ -234,5 +235,75 @@ public class VacinaDAO {
 		}
 
 		return desativarVacina;
+	}
+	
+	public List<VacinaVO> consultarTodasVacinasComSeletor(SeletorVacinaVO seletor) {
+		
+		String sql = " SELECT * FROM VACINA v";
+		
+		if (seletor.temFiltro()) {
+			sql = criarFiltros(seletor, sql);
+		}
+		
+		if (seletor.temPaginacao()) {
+			sql += " LIMIT " + seletor.getLimite() + " OFFSET " + seletor.getOffset();
+		}
+		
+		List<VacinaVO> todasVacinas = new ArrayList<>();
+		
+		try (Connection conn = Banco.getConnection();
+				PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);) {
+	
+			ResultSet resultadoConsulta = stmt.executeQuery();
+			
+			while (resultadoConsulta.next()) {
+				
+				VacinaVO vacina = this.converterDoResultSet(resultadoConsulta);
+				
+				todasVacinas.add(vacina);
+				}
+		} catch (SQLException e) {
+			System.err.println("Erro ao consultar todas as vacinas: \n " + e.getMessage());
+		}
+
+		return todasVacinas;
+	}
+
+	private String criarFiltros(SeletorVacinaVO seletor, String sql) {
+		sql += " WHERE ";
+		boolean primeiro = true;
+		
+		if (seletor.getIdVacina() > 0) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "v.IDVACINA " + seletor.getIdVacina();
+			primeiro = false;
+		}
+		
+		if ((seletor.getNomePais() != null) && (seletor.getNomePais().trim().length() > 0)) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "v.PAIS_ORIGEM LIKE '%" + seletor.getNomePais() + "%'";
+			primeiro = false;
+		}
+		
+		if ((seletor.getNomeVacina() != null) && (seletor.getNomeVacina().trim().length() > 0)) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "v.NOME LIKE '%" + seletor.getNomeVacina() + "%'";
+			primeiro = false;
+		}
+		
+		if (seletor.getDataInicioPesquisa() != null) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "v.DATA_INICIO_PESQUISA >= '" + seletor.getDataInicioPesquisa() + "'";
+			primeiro = false;
+		}
+		return sql;
 	}
 }
